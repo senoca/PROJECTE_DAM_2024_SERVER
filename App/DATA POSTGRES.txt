@@ -1,0 +1,8 @@
+---- DATABASE SUPERUSER (postgres) ----
+pswd	1234
+port	5432
+
+---- DB libraryapp ----
+ADMIN
+user	library_app_admin
+pswd	1234
