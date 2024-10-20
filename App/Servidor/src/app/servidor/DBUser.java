@@ -25,24 +25,26 @@ public class DBUser {
     /*
     Busca un únic usuari amb alies i pswd introduits, retorna
     */
-    public static User getUserFromCredentials(String alias, String pswd) {
-        String statement = ""
-                + "select userid, useralias, userpswd, username, surname1, surname2, usertype"
-                + "from users"
-                + "where alias = '" + alias + "' and pswd = '" + pswd + "'";
+    public static User getUserFromCredentials(String username, String pswd) {
+        String query = "SELECT userid, useralias, userpswd, username, surname1, surname2, usertype "
+                     + "FROM users "
+                     + "WHERE username = ? AND userpswd = ?";  // Cambiado de "alias" a "username"
         User user = null;
+
         try {
-            ResultSet rs = null;
-            rs = JDBCUtils.getSelect(statement);
-            while (rs.next())
-            {
-                user = buildUserObject(rs);
+            PreparedStatement statement = JDBCUtils.prepareStatement(query);
+            statement.setString(1, username);   // Sustituye el primer ? por el username
+            statement.setString(2, pswd);    // Sustituye el segundo ? por la contraseña
+
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+                user = buildUserObject(rs);  // Construye el objeto User si se encuentra un resultado
+                System.out.println("Usuario encontrado: " + user.getAlias() + " con tipo de usuario: " + user.getType());  // Debug: confirmar si encuentra el usuario y su tipo
+            } else {
+                System.out.println("Usuario no encontrado con username: " + username + " y contraseña: " + pswd);  // Debug: no encuentra usuario
             }
         } catch (SQLException ex) {
-            throw new ServidorException(ex.getMessage());
-        } catch (ServidorException ex) {
-            throw ex;
-        } catch (Exception ex) {
             throw new ServidorException(ex.getMessage());
         }
         return user;
@@ -53,7 +55,7 @@ public class DBUser {
     public static List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
         String statement = "select userid, useralias, userpswd, username, surname1, surname2, usertype\n" +
-"from USERS";
+        "from USERS";
          try {
             ResultSet rs = null;
             rs = JDBCUtils.getSelect(statement);
@@ -93,4 +95,28 @@ public class DBUser {
         return u;
     }
     
+    
+     /*
+    Método para obtener el tipo de usuario (USER o ADMIN) por username.
+    */
+    public static String getUserType(String username) {
+        String query = "SELECT usertype FROM users WHERE username = ?";
+        String userType = null;
+        
+        try {
+            PreparedStatement statement = JDBCUtils.prepareStatement(query);
+            statement.setString(1, username);   // Sustituye el primer ? por el username
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+                userType = rs.getString("usertype");
+                System.out.println("Tipo de usuario: " + userType);
+            } else {
+                System.out.println("Tipo de usuario no encontrado para username: " + username);
+            }
+        } catch (SQLException ex) {
+            throw new ServidorException(ex.getMessage());
+        }
+        return userType;
+    }
 }

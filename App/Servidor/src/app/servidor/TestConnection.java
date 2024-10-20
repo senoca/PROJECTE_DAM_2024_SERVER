@@ -11,14 +11,14 @@ public class TestConnection {
         String password = "1234";
         
         JDBCUtils.openConnection(url, user, password);
-        System.out.println("Connection opened");
+        System.out.println("Connexió oberta");
         List<User> users = DBUser.getAllUsers();
-        System.out.println("Users found:");
+        System.out.println("Usuaris trobats:");
         for (User u : users)
         {
             System.out.println(u.getFullName());
         }
         JDBCUtils.closeConnection();
-        System.out.println("Connection closed");
+        System.out.println("Connexió tancada");
     }
 }
