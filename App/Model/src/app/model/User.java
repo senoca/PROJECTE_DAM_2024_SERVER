@@ -4,9 +4,9 @@ public class User {
     
     // ATRIBUTS
     private int id;             // Identificador numéric de l'usuari, OBLIGATORI
-    private String alias;       // Nom del perfil d'usuari al login, OBLIGATORI
+    private String username;       // Nom del perfil d'usuari al login, OBLIGATORI
     private String password;    // Contrasenya de l'usuari, OBLIGATORIA
-    private String name;        // Nom real de l'usuari, OBLIGATORI
+    private String realname;        // Nom real de l'usuari, OBLIGATORI
     private String surname1;    // Primer cognom de l'usuari, OBLIGATORI
     private String surname2;    // Segon cognom de l'usuari, opcional
     private UserType type;      // Tipus d'usuari. OBLIGATORI. Pot ser user, admin o worker
@@ -14,7 +14,7 @@ public class User {
     // MÉTODES
     
     public String getFullName() {
-        String fullName = getName() + " " + getSurname1();
+        String fullName = getRealname() + " " + getSurname1();
         if (getSurname2() != null) {
             fullName += " " + getSurname2();
         }
@@ -34,38 +34,38 @@ public class User {
     }
     
     // CONSTRUCTORS
-    public User(int id, String alias, String password, String name, String surname1, String surname2, UserType type) {
+    public User(int id, String username, String password, String name, String surname1, String surname2, UserType type) {
         setId(id);
-        setAlias(alias);
+        setUsername(username);
         setPassword(password);
-        setName(name);
+        setRealname(name);
         setSurname1(surname1);
         setSurname2(surname2);
         setType(type);
     }
-    public User(int id, String alias, String password, String name, String surname1, String surname2, String type) {
+    public User(int id, String username, String password, String name, String surname1, String surname2, String type) {
         setId(id);
-        setAlias(alias);
+        setUsername(username);
         setPassword(password);
-        setName(name);
+        setRealname(name);
         setSurname1(surname1);
         setSurname2(surname2);
         setType(stringToUserType(type));
     }
 
-    public User(int id, String alias, String password, String name, String surname1, UserType type) {
+    public User(int id, String username, String password, String name, String surname1, UserType type) {
         setId(id);
-        setAlias(alias);
+        setUsername(username);
         setPassword(password);
-        setName(name);
+        setRealname(name);
         setSurname1(surname1);
         setType(type);
     }
-    public User(int id, String alias, String password, String name, String surname1, String type) {
+    public User(int id, String username, String password, String name, String surname1, String type) {
         setId(id);
-        setAlias(alias);
+        setUsername(username);
         setPassword(password);
-        setName(name);
+        setRealname(name);
         setSurname1(surname1);
         setType(stringToUserType(type));
     }
@@ -75,16 +75,16 @@ public class User {
         return id;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getName() {
-        return name;
+    public String getRealname() {
+        return realname;
     }
 
     public String getSurname1() {
@@ -106,11 +106,11 @@ public class User {
         this.id = id;
     }
 
-    public void setAlias(String alias) {
+    public void setUsername(String alias) {
         // Alias no pot ser null o buit
         if (alias == null) throw new ModelException("ERROR: Alies no pot ser nul");
         else if (alias.isBlank()) throw new ModelException("ERROR: Alies no pot estar buit");
-        this.alias = alias;
+        this.username = alias;
     }
 
     public void setPassword(String password) {
@@ -120,11 +120,11 @@ public class User {
         this.password = password;
     }
 
-    public void setName(String name) {
+    public void setRealname(String name) {
         // name no pot ser null o buit
         if (name == null) throw new ModelException("ERROR: name no pot ser nul");
         else if (name.isBlank()) throw new ModelException("ERROR: name no pot estar buit");
-        this.name = name;
+        this.realname = name;
     }
 
     public void setSurname1(String surname1) {

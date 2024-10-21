@@ -15,10 +15,11 @@ public class JDBCUtils {
     - user el nom d'usuari de postgres
     - password és la contrasenya de l'usuari
     */
+    
     private static String url = "jdbc:postgresql://localhost/libraryapp";
     private static String user = "library_app_admin";
     private static String password = "1234";
-            
+    
     // Connexió JDBC amb postgres
     private static Connection conJDBC = null;
     
@@ -69,7 +70,7 @@ public class JDBCUtils {
         if (conJDBC != null) {
             try {
                 rollback();
-            }
+            } catch (Exception ex) {}
             finally {
                 try {
                     conJDBC.close();

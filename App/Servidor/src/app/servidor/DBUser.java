@@ -26,7 +26,7 @@ public class DBUser {
     Busca un únic usuari amb alies i pswd introduits, retorna
     */
     public static User getUserFromCredentials(String username, String pswd) {
-        String query = "SELECT userid, useralias, userpswd, username, surname1, surname2, usertype "
+        String query = "SELECT userid, username, userpswd, realname, surname1, surname2, usertype "
                      + "FROM users "
                      + "WHERE username = ? AND userpswd = ?";  // Cambiado de "alias" a "username"
         User user = null;
@@ -40,7 +40,7 @@ public class DBUser {
             
             if (rs.next()) {
                 user = buildUserObject(rs);  // Construye el objeto User si se encuentra un resultado
-                System.out.println("Usuario encontrado: " + user.getAlias() + " con tipo de usuario: " + user.getType());  // Debug: confirmar si encuentra el usuario y su tipo
+                System.out.println("Usuario encontrado: " + user.getUsername() + " con tipo de usuario: " + user.getType());  // Debug: confirmar si encuentra el usuario y su tipo
             } else {
                 System.out.println("Usuario no encontrado con username: " + username + " y contraseña: " + pswd);  // Debug: no encuentra usuario
             }
@@ -54,7 +54,7 @@ public class DBUser {
     
     public static List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
-        String statement = "select userid, useralias, userpswd, username, surname1, surname2, usertype\n" +
+        String statement = "select userid, username, userpswd, realname, surname1, surname2, usertype\n" +
         "from USERS";
          try {
             ResultSet rs = null;
@@ -82,9 +82,9 @@ public class DBUser {
         try {
             u = new User(
                     rs.getInt("userid"),
-                    rs.getString("useralias"),
-                    rs.getString("userpswd"),
                     rs.getString("username"),
+                    rs.getString("userpswd"),
+                    rs.getString("realname"),
                     rs.getString("surname1"),
                     rs.getString("surname2"),
                     rs.getString("usertype")

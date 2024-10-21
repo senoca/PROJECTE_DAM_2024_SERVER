@@ -162,8 +162,8 @@ public class ServerApp {
                     User user = activeSessions.get(sessionId);
                     
                     // Enviar la información del perfil al cliente
-                    writeToClient.println(user.getAlias());
-                    writeToClient.println(user.getName());
+                    writeToClient.println(user.getUsername());
+                    writeToClient.println(user.getRealname());
                     writeToClient.println(user.getSurname1());
                     writeToClient.println(user.getSurname2() != null ? user.getSurname2() : "");
                     writeToClient.println(user.getType());

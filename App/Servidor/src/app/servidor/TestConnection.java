@@ -20,5 +20,7 @@ public class TestConnection {
         }
         JDBCUtils.closeConnection();
         System.out.println("Connexió tancada");
+    
+        
     }
 }
