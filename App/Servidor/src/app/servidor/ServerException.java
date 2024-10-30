@@ -8,21 +8,21 @@ package app.servidor;
  *
  * @author Sergio
  */
-public class ServidorException extends RuntimeException {
+public class ServerException extends RuntimeException {
 
-    public ServidorException(String message) {
+    public ServerException(String message) {
         super(message);
     }
 
-    public ServidorException(String message, Throwable cause) {
+    public ServerException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ServidorException(Throwable cause) {
+    public ServerException(Throwable cause) {
         super(cause);
     }
 
-    public ServidorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ServerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
     

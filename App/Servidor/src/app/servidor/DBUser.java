@@ -6,12 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DBUser {
     
+    private static PreparedStatement insertUserStatement = null;
+    private static PreparedStatement deleteUserStatement = null;
+    private static PreparedStatement modifyUserStatement = null;
     
     /*
     Busca si existex un usuari amb alies i pswd introduits, retorna true si existeix i false si no
@@ -45,7 +49,7 @@ public class DBUser {
                 System.out.println("Usuario no encontrado con username: " + username + " y contraseña: " + pswd);  // Debug: no encuentra usuario
             }
         } catch (SQLException ex) {
-            throw new ServidorException(ex.getMessage());
+            throw new ServerException(ex.getMessage());
         }
         return user;
     }
@@ -65,11 +69,11 @@ public class DBUser {
                 users.add(user);
             }
         } catch (SQLException ex) {
-            throw new ServidorException(ex.getMessage());
-        } catch (ServidorException ex) {
+            throw new ServerException(ex.getMessage());
+        } catch (ServerException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new ServidorException(ex.getMessage());
+            throw new ServerException(ex.getMessage());
         }
         return users;
     }
@@ -90,7 +94,7 @@ public class DBUser {
                     rs.getString("usertype")
             );
         } catch (SQLException ex) {
-            throw new ServidorException(ex.getMessage());
+            throw new ServerException(ex.getMessage());
         }
         return u;
     }
@@ -115,8 +119,83 @@ public class DBUser {
                 System.out.println("Tipo de usuario no encontrado para username: " + username);
             }
         } catch (SQLException ex) {
-            throw new ServidorException(ex.getMessage());
+            throw new ServerException(ex.getMessage());
         }
         return userType;
+    }
+
+    /**
+     *
+     * @param user
+     */
+
+    public static void insertUser(User user) 
+    {
+        try {
+            if (user == null)
+            {
+                throw new ServerException("Error en insertUser: usuari nul");
+            }
+            String statement = "insert into USERS ("
+                    + "username,"
+                    + "userpswd,"
+                    + "realname,"
+                    + "surname1,"
+                    + "surname2,"
+                    + "usertype"
+                    + ")"
+                    + "values (?,?,?,?,?,?)";
+            if (insertUserStatement == null) {
+                insertUserStatement = JDBCUtils.prepareStatement(statement);
+            }
+            insertUserStatement.setString(1, user.getUsername());
+            insertUserStatement.setString(2, user.getPassword());
+            insertUserStatement.setString(3, user.getRealname());
+            insertUserStatement.setString(4, user.getSurname1());
+            insertUserStatement.setString(5, user.getSurname2());
+            insertUserStatement.setString(6, user.getTypeAsString());
+            insertUserStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new ServerException (ex.getMessage());
+        }
+        
+    }
+    
+    public static void deleteUser(int userid) {
+        try {
+            String statement = "delete from users where userid = ?";
+            if (deleteUserStatement == null) {
+                JDBCUtils.prepareStatement(statement);
+            }
+            deleteUserStatement.setInt(1, userid);
+        } catch (SQLException ex) {
+            throw new ServerException(ex);
+        }
+    }
+    
+    public static void modifyUser(int userId, User newUser) {
+        try {
+            String statement = "update USERS set "
+                    + "username = ?,"
+                    + "userpsed = ?,"
+                    + "realname = ?,"
+                    + "surname1 = ?,"
+                    + "surname2 = ?,"
+                    + "usertype = ? "
+                    + "where userid = ? ";
+            if (modifyUserStatement == null) {
+                JDBCUtils.prepareStatement(statement);
+            }
+            modifyUserStatement.setString(1, newUser.getUsername());
+            modifyUserStatement.setString(2, newUser.getPassword());
+            modifyUserStatement.setString(3, newUser.getRealname());
+            modifyUserStatement.setString(4, newUser.getSurname1());
+            modifyUserStatement.setString(5, newUser.getSurname2());
+            modifyUserStatement.setString(6, newUser.getTypeAsString());
+            modifyUserStatement.setInt(7, userId);
+        } catch (SQLException ex) {
+            throw new ServerException(ex);
+        }
+        
     }
 }

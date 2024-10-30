@@ -70,6 +70,13 @@ public class User {
         setType(stringToUserType(type));
     }
     
+    
+    public String getTypeAsString() {
+         if (type == UserType.ADMIN) return "ADMIN";
+         else if (type == UserType.USER) return "USER";
+         else if (type == UserType.WORKER) return "WORKER";
+         else throw new ModelException("UserType incorrecte");
+    }
     // GETTERS
     public int getId() {
         return id;

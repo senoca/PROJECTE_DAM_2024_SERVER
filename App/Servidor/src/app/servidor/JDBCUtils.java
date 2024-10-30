@@ -41,7 +41,7 @@ public class JDBCUtils {
                 conJDBC = DriverManager.getConnection(url, user, password);
                 conJDBC.setAutoCommit(false);
             } catch (SQLException ex) {
-                throw new ServidorException("Error en obrir la connexió JDBC. " + ex.getMessage());
+                throw new ServerException("Error en obrir la connexió JDBC. " + ex.getMessage());
             }
         }
     }
@@ -52,7 +52,7 @@ public class JDBCUtils {
                 conJDBC = DriverManager.getConnection(url, user, password);
                 conJDBC.setAutoCommit(false);
             } catch (SQLException ex) {
-                throw new ServidorException("Error en obrir la connexió JDBC. " + ex.getMessage());
+                throw new ServerException("Error en obrir la connexió JDBC. " + ex.getMessage());
             }
         }
     }
@@ -75,7 +75,7 @@ public class JDBCUtils {
                 try {
                     conJDBC.close();
                 } catch (SQLException ex) {
-                    throw new ServidorException("Error en tancar la connexió JDBC. "+ ex.getMessage());
+                    throw new ServerException("Error en tancar la connexió JDBC. "+ ex.getMessage());
                 }
             }
         }
@@ -88,7 +88,7 @@ public class JDBCUtils {
         try {
             conJDBC.rollback();
         } catch (SQLException ex) {
-            throw new ServidorException("Error en fer rollback: " + ex.getMessage());
+            throw new ServerException("Error en fer rollback: " + ex.getMessage());
         }
     }
     
@@ -101,7 +101,7 @@ public class JDBCUtils {
         try{
             conJDBC.commit();
         } catch (SQLException ex) {
-            throw new ServidorException("Error en fer commit: " + ex.getMessage());
+            throw new ServerException("Error en fer commit: " + ex.getMessage());
         }
     }
     
@@ -115,10 +115,10 @@ public class JDBCUtils {
             openConnection();
             ps = conJDBC.prepareStatement(command);
             return ps;
-        } catch (ServidorException ex) {
+        } catch (ServerException ex) {
             throw ex;
         } catch (SQLException ex) {
-            throw new ServidorException(ex.getMessage());
+            throw new ServerException(ex.getMessage());
         }
     }
     
@@ -134,7 +134,7 @@ public class JDBCUtils {
             PreparedStatement query = conJDBC.prepareStatement(statement);
             rs = query.executeQuery();
         } catch (Exception ex) {
-            throw new ServidorException(ex.getMessage());
+            throw new ServerException(ex.getMessage());
         }
         return rs;
     }

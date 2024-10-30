@@ -60,21 +60,21 @@ public class ServerApp {
                 if ("LOGOUT".equals(command)) {
                     try {
                         logout(activeSessions, readFromClient, writeToClient);
-                    } catch (ServidorException ex){
+                    } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                     
                 } else if ("LOGIN".equals(command)) {
                     try {
                         login(activeSessions, readFromClient, writeToClient);
-                    } catch (ServidorException ex){
+                    } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
 
                 } else if ("GET_PROFILE".equals(command)) {
                     try {
                         getProfile(activeSessions, readFromClient, writeToClient);
-                    } catch (ServidorException ex){
+                    } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else {
@@ -112,7 +112,7 @@ public class ServerApp {
                     System.out.println("Intent de logout fallit. Sessió no trobada: " + sessionId);
                 }
             } catch (IOException ex) {
-                throw new ServidorException(ex);
+                throw new ServerException(ex);
             }
         }
 
@@ -149,7 +149,7 @@ public class ServerApp {
                     }
                 }
             } catch (IOException ex) {
-                throw new ServidorException(ex);
+                throw new ServerException(ex);
             }
         }
 
@@ -174,7 +174,7 @@ public class ServerApp {
                     System.out.println("Error al obtenir perfil. Sessió no válida: " + sessionId);
                 }
             } catch (IOException ex) {
-                throw new ServidorException(ex);
+                throw new ServerException(ex);
             }
         }
     }
