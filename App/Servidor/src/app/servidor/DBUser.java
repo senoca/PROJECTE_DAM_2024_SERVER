@@ -54,7 +54,29 @@ public class DBUser {
         return user;
     }
 
-    
+    public static User getUserById(int idToSearch) {
+        String query = "SELECT userid, username, userpswd, realname, surname1, surname2, usertype "
+                     + "FROM users "
+                     + "WHERE userid = ? ";  // Cambiado de "alias" a "username"
+        User user = null;
+
+        try {
+            PreparedStatement statement = JDBCUtils.prepareStatement(query);
+            statement.setString(1, Integer.toString(idToSearch));   // Sustituye el primer ? por el username
+
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+                user = buildUserObject(rs);  // Construye el objeto User si se encuentra un resultado
+                System.out.println("Usuario encontrado: " + user.getUsername() + " con tipo de usuario: " + user.getType());  // Debug: confirmar si encuentra el usuario y su tipo
+            } else {
+                System.out.println("Usuario no encontrado con id: " + idToSearch);  // Debug: no encuentra usuario
+            }
+        } catch (SQLException ex) {
+            throw new ServerException(ex.getMessage());
+        }
+        return user;
+    }
     
     public static List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
@@ -161,7 +183,7 @@ public class DBUser {
         
     }
     
-    public static void deleteUser(int userid) {
+    public static void deleteUserById(int userid) {
         try {
             String statement = "delete from users where userid = ?";
             if (deleteUserStatement == null) {

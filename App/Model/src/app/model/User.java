@@ -1,6 +1,8 @@
 package app.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     
     // ATRIBUTS
     private int id;             // Identificador numéric de l'usuari, OBLIGATORI

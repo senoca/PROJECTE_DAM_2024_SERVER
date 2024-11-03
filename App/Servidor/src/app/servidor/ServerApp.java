@@ -4,10 +4,14 @@ import app.model.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +21,11 @@ public class ServerApp {
     // Mapa en memoria para almacenar las sesiones activas, con el identificador de sesión como clave.
     private static HashMap<String, User> activeSessions = new HashMap<>();
 
+    /**
+     *
+     * @param args 
+     * Main del servidor
+     */
     public static void main(String[] args) {
         int port = 12345;  // Puerto en el que escuchará el servidor
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -77,7 +86,38 @@ public class ServerApp {
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
-                } else {
+                } else if ("GET_ALL_USERS".equals(command)) {
+                    try {
+                        getAllUsers();
+                    } catch (ServerException ex){
+                        System.out.println(ex.getMessage());
+                    }
+                } else if ("GET_USER_BY_ID".equals(command)) {
+                    try {
+                        getUserById();
+                    } catch (ServerException ex){
+                        System.out.println(ex.getMessage());
+                    }
+                } else if ("ADD_USER".equals(command)) {
+                    try {
+                        addNewUser();
+                    } catch (ServerException ex){
+                        System.out.println(ex.getMessage());
+                    }
+                } else if ("DELETE_USER".equals(command)) {
+                    try {
+                        deleteUserById();
+                    } catch (ServerException ex){
+                        System.out.println(ex.getMessage());
+                    }
+                } else if ("MODIFY_USER".equals(command)) {
+                    try {
+                        modifyUser();
+                    } catch (ServerException ex){
+                        System.out.println(ex.getMessage());
+                    }
+                } 
+                else {
                     // Comando no reconocido
                     writeToClient.println("ERROR: Ordre no reconeguda");
                     System.err.println("Error: Orde no reconeguda: " + command);
@@ -175,6 +215,102 @@ public class ServerApp {
                 }
             } catch (IOException ex) {
                 throw new ServerException(ex);
+            }
+        }
+
+        private void getAllUsers() {
+            List<User> allUsers = DBUser.getAllUsers();
+            ObjectOutputStream sendObjectToClient = null;
+            try {
+                sendObjectToClient = new ObjectOutputStream(clientSocket.getOutputStream());
+                sendObjectToClient.writeObject(allUsers); // envio la llista per socket
+                System.out.println("Llista enviada");
+            } catch (IOException ex) {
+                throw new ServerException(ex);
+            } finally {
+                try {
+                    sendObjectToClient.close();
+                } catch (IOException ex) {}
+            }
+        }
+        
+        private void getUserById() {
+            ObjectInputStream readObjectFromClient = null;
+            ObjectOutputStream sendObjectToClient = null;
+            try {
+                readObjectFromClient = new ObjectInputStream(clientSocket.getInputStream());
+                int userId = 0; // inicialitzo la id que es buscarà
+                userId = readObjectFromClient.readInt(); // el client enviarà pel socket un int, l'id d'usuari
+                User user = DBUser.getUserById(userId);
+                sendObjectToClient = new ObjectOutputStream(clientSocket.getOutputStream());
+                System.out.println("Trobat usuari");
+                sendObjectToClient.writeObject(user); // si no ha trobat l'usuari, user té valor null 
+                System.out.println("Usuari enviat");
+            } catch (IOException ex) {
+                throw new ServerException(ex);
+            } finally {
+                try {
+                    readObjectFromClient.close();
+                    sendObjectToClient.close();
+                } catch (IOException ex) {}
+            }
+        }
+        
+        private void deleteUserById()
+        {
+            ObjectInputStream readObjectFromClient = null;
+            try {
+                readObjectFromClient = new ObjectInputStream(clientSocket.getInputStream());
+                int userId = 0; // inicialitzo la id que es buscarà
+                userId = readObjectFromClient.readInt(); // el client enviarà pel socket un int, l'id d'usuari
+                DBUser.deleteUserById(userId);
+            } catch (IOException ex) {
+                throw new ServerException(ex);
+            } finally {
+                try {
+                    readObjectFromClient.close();
+                } catch (IOException ex) {}
+            }
+        }
+        
+        private void addNewUser()
+        {
+            ObjectInputStream readObjectFromClient = null;
+            
+            try {
+                readObjectFromClient = new ObjectInputStream(clientSocket.getInputStream());
+                User newUser = (User) readObjectFromClient.readObject(); 
+                /*
+                SOBRE USERID DE NEWUSER!!!
+                la userId introduida pel client és completament ignorada pel servidor, 
+                doncs la base de dades en generarà una que sigui única. Per tant, la id real
+                del newUser serà diferent de la que indica el client
+                */
+                DBUser.insertUser(newUser);
+                System.out.println("inserció correcta");
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new ServerException(ex);
+            } finally {
+                try {
+                    readObjectFromClient.close();
+                } catch (IOException ex) {}
+            }
+        }
+        
+        private void modifyUser() {
+            ObjectInputStream readObjectFromClient = null;
+            try {
+                readObjectFromClient = new ObjectInputStream(clientSocket.getInputStream());
+                int userId = readObjectFromClient.readInt();
+                User updatedUser = (User) readObjectFromClient.readObject(); 
+                DBUser.modifyUser(userId, updatedUser);
+                System.out.println("modificació correcta");
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new ServerException(ex);
+            } finally {
+                try {
+                    readObjectFromClient.close();
+                } catch (IOException ex) {}
             }
         }
     }
