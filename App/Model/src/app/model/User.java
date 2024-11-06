@@ -117,8 +117,8 @@ public class User implements Serializable {
 
     public void setUsername(String alias) {
         // Alias no pot ser null o buit
-        if (alias == null) throw new ModelException("ERROR: Alies no pot ser nul");
-        else if (alias.isBlank()) throw new ModelException("ERROR: Alies no pot estar buit");
+        if (alias == null) throw new ModelException("ERROR: Username no pot ser nul");
+        else if (alias.isBlank()) throw new ModelException("ERROR: Username no pot estar buit");
         this.username = alias;
     }
 
