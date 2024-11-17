@@ -17,37 +17,38 @@ CREATE TABLE USERS (
 );
 GRANT ALL PRIVILEGES ON USERS TO library_app_admin;
 
-DROP TABLE if exists AUTHOR;
-CREATE TABLE AUTHOR (
+DROP TABLE if exists AUTHORS;
+CREATE TABLE AUTHORS (
     authorid        serial primary key,
     authorname      varchar(255) not null,
-    surname1        varchar(255) not null,
+    surname1        varchar(255),
     surname2        varchar(255),
-    biography       varchar(255),
-    nationality     varchar(255),
-    yearbirth       integer
-)
-GRANT ALL PRIVILEGES ON AUTHOR TO library_app_admin;
+    biography       varchar(255) not null,
+    nationality     varchar(255) not null,
+    yearbirth       integer not null
+);
+GRANT ALL PRIVILEGES ON AUTHORS TO library_app_admin;
 
 DROP TABLE if exists MEDIA;
 CREATE TABLE MEDIA (
     workid                  serial primary key,
     title                   varchar(255) not null unique,
-    yearpublication         integer,
-    mediatype               varchar(255),
-    media_description       varchar(255),
+    yearpublication         integer not null,
+    mediatype               varchar(255) not null,
+    media_description       varchar(255) not null,
 
     CONSTRAINT ck_mediatype_is_valid CHECK (
-        (upper(usertype) = 'BOOK' )
-        OR (upper(usertype) = 'MAGAZINE' )
-        OR (upper(usertype) = 'MULTIMEDIA' )
+        (upper(mediatype) = 'BOOK' )
+        OR (upper(mediatype) = 'MAGAZINE' )
+        OR (upper(mediatype) = 'MULTIMEDIA' )
     )
 );
 GRANT ALL PRIVILEGES ON MEDIA TO library_app_admin;
 
 DROP TABLE if exists MEDIA_CREATORS;
 CREATE TABLE MEDIA_CREATORS (
-    workid                  integer primary key,
-    creator_id              integer primary key,
+    workid                  integer,
+    creatorid              integer,
+	PRIMARY KEY (workid, creatorid)
 );
 GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;

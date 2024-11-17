@@ -15,17 +15,18 @@ public class Author {
     private String surname2;
     private String biography;
     private String nationality;
-    private Integer yearbirth;
-    private List<Media> works;
+    private int yearbirth;
+    //private List<Media> works;
 
-    public Author(int authorid, String authorname, String surname1) {
+    public Author(int authorid, String authorname, String biography, String nationality, int yearbirth) {
         setAuthorid(authorid);
         setAuthorname(authorname);
-        setSurname1(surname1);
-        setWorks(works);
+        setBiography(biography);
+        setNationality(nationality);
+        setYearbirth(yearbirth);
     }
-
-    public Author(int authorid, String authorname, String surname1, String surname2, String biography, String nationality, Integer yearbirth, List<Media> works) {
+    
+    public Author(int authorid, String authorname, String surname1, String surname2, String biography, String nationality, int yearbirth/*, List<Media> works*/) {
         setAuthorid(authorid);
         setAuthorname(authorname);
         setSurname1(surname1);
@@ -33,7 +34,7 @@ public class Author {
         setBiography(biography);
         setNationality(nationality);
         setYearbirth(yearbirth);
-        setWorks(works);
+        //setWorks(works);
     }
 
     
@@ -64,8 +65,6 @@ public class Author {
     }
 
     public void setSurname1(String surname1) {
-        if (authorname == null) throw new ModelException("ERROR: authorname no pot ser nul");
-        else if (authorname.isBlank()) throw new ModelException("ERROR: authorname no pot estar buit");
         this.surname1 = surname1;
     }
 
@@ -82,6 +81,8 @@ public class Author {
     }
 
     public void setBiography(String biography) {
+        if (biography == null) throw new ModelException("ERROR: biography no pot ser nul");
+        else if (biography.isBlank()) throw new ModelException("ERROR: biography no pot estar buit");
         this.biography = biography;
     }
 
@@ -90,17 +91,19 @@ public class Author {
     }
 
     public void setNationality(String nationality) {
+        if (nationality == null) throw new ModelException("ERROR: nationality no pot ser nul");
+        else if (nationality.isBlank()) throw new ModelException("ERROR: nationality no pot estar buit");
         this.nationality = nationality;
     }
 
-    public Integer getYearbirth() {
+    public int getYearbirth() {
         return yearbirth;
     }
 
-    public void setYearbirth(Integer yearbirth) {
+    public void setYearbirth(int yearbirth) {
         this.yearbirth = yearbirth;
     }
-
+/*
     public List<Media> getWorks() {
         return works;
     }
@@ -110,9 +113,9 @@ public class Author {
         else this.works = works;
     }
     
-    public void addToWorks(Media work) {
+    public void addWorkToBibliography(Media work) {
         works.add(work);
     }
-    
+  */  
     
 }

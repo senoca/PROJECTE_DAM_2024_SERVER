@@ -16,6 +16,7 @@ public class DBUser {
     private static PreparedStatement insertUserStatement = null;
     private static PreparedStatement deleteUserStatement = null;
     private static PreparedStatement modifyUserStatement = null;
+    private static PreparedStatement selectUserByIdStatement = null;
     
     /*
     Busca si existex un usuari amb alies i pswd introduits, retorna true si existeix i false si no
@@ -61,10 +62,10 @@ public class DBUser {
         User user = null;
 
         try {
-            PreparedStatement statement = JDBCUtils.prepareStatement(query);
-            statement.setString(1, Integer.toString(idToSearch));   // Sustituye el primer ? por el username
+            selectUserByIdStatement = JDBCUtils.prepareStatement(query);
+            selectUserByIdStatement.setString(1, Integer.toString(idToSearch));   // Sustituye el primer ? por el username
 
-            ResultSet rs = statement.executeQuery();
+            ResultSet rs = selectUserByIdStatement.executeQuery();
             
             if (rs.next()) {
                 user = buildUserObject(rs);  // Construye el objeto User si se encuentra un resultado
@@ -215,6 +216,7 @@ public class DBUser {
             modifyUserStatement.setString(5, newUser.getSurname2());
             modifyUserStatement.setString(6, newUser.getTypeAsString());
             modifyUserStatement.setInt(7, userId);
+            modifyUserStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
