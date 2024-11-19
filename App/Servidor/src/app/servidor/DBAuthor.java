@@ -26,16 +26,18 @@ public class DBAuthor {
     private static PreparedStatement selectAuthorByIdStatement = null;
     private static PreparedStatement updateAuthorByIdStatement = null;
     
-    public static void insertNewAuthor(Author author) {
+    public static int insertNewAuthor(Author author) {
         if (author == null)
         {
             throw new ServerException("Error en insertNewAuthor: author nul");
         }
-        insertNewAuthorData(author);
+        int authorID = insertNewAuthorData(author);
         //insertNewAuthorBibliography(author.getWorks());
+        
+        return authorID;
     }
     
-    public static void deleteNewAuthor(int authorId) {
+    public static void deleteAuthor(int authorId) {
         try {
             /*
             Només s'esborrarà si l'autor no té cap obra a la base de dades,
@@ -131,7 +133,8 @@ public class DBAuthor {
         return authors;
     }
 
-    private static void insertNewAuthorData(Author author) {
+    private static int insertNewAuthorData(Author author) {
+        int authorId = -1;
         try {
             String statement = "insert into AUTHORS"
                     + "("
@@ -142,7 +145,8 @@ public class DBAuthor {
                     + "nationality,"
                     + "yearbirth"
                     + ") "
-                    + "values (?,?,?,?,?,?)";
+                    + "values (?,?,?,?,?,?) "
+                    + "returning authorid";
             if (insertAuthorDataStatement == null) {
                 insertAuthorDataStatement = JDBCUtils.prepareStatement(statement);
             }
@@ -152,9 +156,17 @@ public class DBAuthor {
             insertAuthorDataStatement.setString(4, author.getBiography());
             insertAuthorDataStatement.setString(5, author.getNationality());
             insertAuthorDataStatement.setInt(6, author.getYearbirth());
+            
+            insertAuthorDataStatement.execute();
+            ResultSet rs = insertAuthorDataStatement.getResultSet();
+            if (rs.next()) {
+                authorId = rs.getInt("authorid");
+            }
+            if (authorId == -1) throw new ServerException("Error en insertNewAuthorData: no s'ha generat correctament authorid");
         } catch (SQLException ex) {
             throw new ServerException(ex);
         } 
+        return authorId;
     }
 
     private static void insertNewAuthorBibliography(List<Media> works) {
@@ -165,7 +177,7 @@ public class DBAuthor {
         */
     }
 
-    private static Author buildAuthorObject(ResultSet rs) {
+    public static Author buildAuthorObject(ResultSet rs) {
         Author a = null;
         try {
             
@@ -183,4 +195,6 @@ public class DBAuthor {
         }
         return a;
     }
+    
+    
 }

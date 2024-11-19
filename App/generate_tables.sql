@@ -49,6 +49,8 @@ DROP TABLE if exists MEDIA_CREATORS;
 CREATE TABLE MEDIA_CREATORS (
     workid                  integer,
     creatorid              integer,
-	PRIMARY KEY (workid, creatorid)
+	PRIMARY KEY (workid, creatorid),
+    CONSTRAINT fk_workid FOREIGN KEY (workid) REFERENCES MEDIA(workid),
+    CONSTRAINT fk_creatorid FOREIGN KEY (creatorid) REFERENCES AUTHORS(authorid)
 );
 GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;

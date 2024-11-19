@@ -27,6 +27,15 @@ public class Media {
         setMedia_description(media_description);
         setAuthors(authors);
     }
+    
+    public Media(int workId, String title, Integer yearPublication, String mediaTypeAsString, String media_description) {
+        setWorkId(workId);
+        setTitle(title);
+        setYearPublication(yearPublication);
+        setMediaType(getMediaTypeFromString(mediaTypeAsString));
+        setMedia_description(media_description);
+        setAuthors(authors);
+    }
 
     public Media(int workId, String title, Integer yearPublication, MediaType mediaType, String media_description, List<Author> authors) {
         setWorkId(workId);
@@ -36,7 +45,32 @@ public class Media {
         setMedia_description(media_description);
         setAuthors(authors);
     }
+    public Media(int workId, String title, Integer yearPublication, String mediaTypeAsString, String media_description, List<Author> authors) {
+        setWorkId(workId);
+        setTitle(title);
+        setYearPublication(yearPublication);
+        setMediaType(getMediaTypeFromString(mediaTypeAsString));
+        setMedia_description(media_description);
+        setAuthors(authors);
+    }
 
+    public static MediaType getMediaTypeFromString(String txt) {
+        if (txt == null || txt.isBlank())
+        {
+            throw new ModelException("Error en getMediatypeFromString, txt null o empty");
+        }
+        else if (txt.equals("BOOK")) return MediaType.BOOK;
+        else if (txt.equals("MAGAZINE")) return MediaType.BOOK;
+        else if (txt.equals("MULTIMEDIA")) return MediaType.MULTIMEDIA;
+        throw new ModelException("Error en getMediatypeFromString, txt té un valor invàlid");
+    }
+    
+    public String getMediaTypeAsString() {
+        if (this.mediaType == MediaType.BOOK) return "BOOK";
+        else if (this.mediaType == MediaType.MAGAZINE) return "MAGAZINE";
+        return "MULTIMEDIA";
+    }
+    
     public int getWorkId() {
         return workId;
     }
@@ -97,7 +131,7 @@ public class Media {
         if (this.authors == null) {
             authors = new ArrayList<Author>();
         }
-        
+        this.authors.clear();
         if (authors != null) {
             for (Author author : authors) {
                 this.authors.add(author);

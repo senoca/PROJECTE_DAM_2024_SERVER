@@ -5,7 +5,7 @@
         <group>
             <file>file:/C:/fpOberta/PROJECTE/repo/App/Servidor/src/app/servidor/ServerApp.java</file>
             <file>file:/C:/fpOberta/PROJECTE/repo/App/Servidor/src/app/servidor/ClientHandler.java</file>
-            <file>file:/C:/fpOberta/PROJECTE/repo/App/Servidor/src/app/servidor/DBUser.java</file>
+            <file>file:/C:/fpOberta/PROJECTE/repo/App/Servidor/src/app/servidor/JDBCUtils.java</file>
             <file>file:/C:/fpOberta/PROJECTE/repo/App/Servidor/src/app/servidor/DBMedia.java</file>
             <file>file:/C:/fpOberta/PROJECTE/repo/App/Servidor/src/app/servidor/DBAuthor.java</file>
         </group>
