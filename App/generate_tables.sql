@@ -54,3 +54,15 @@ CREATE TABLE MEDIA_CREATORS (
     CONSTRAINT fk_creatorid FOREIGN KEY (creatorid) REFERENCES AUTHORS(authorid)
 );
 GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;
+
+DROP TABLE if exists LOANS;
+CREATE TABLE LOANS (
+    workid              integer primary key,
+    userid              integer not null,
+    returned            boolean not null,
+    date_start_loan     date not null,
+    date_end_loan       date not null,
+    CONSTRAINT fk_workid FOREIGN KEY (workid) REFERENCES MEDIA(workid),
+    CONSTRAINT fk_userid FOREIGN KEY (userid) REFERENCES users(userid)
+);
+GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;

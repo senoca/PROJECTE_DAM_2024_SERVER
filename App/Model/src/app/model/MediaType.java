@@ -5,7 +5,7 @@
 package app.model;
 
 /**
- *
+ * Enum usat per distringir els tipus d'obres. Poden ser llibres, revistes o multimedia (DVDs, CDs...)
  * @author Sergio
  */
 public enum MediaType {

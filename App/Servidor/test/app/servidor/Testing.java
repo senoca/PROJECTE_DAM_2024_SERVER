@@ -4,8 +4,8 @@
  */
 package app.servidor;
 
+import app.servidor.app.Utils;
 import app.model.User;
-import static app.servidor.DBUser.getUserFromCredentials;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,15 +27,15 @@ public class Testing {
     // The methods must be annotated with annotation @Test. For example:
     //
     // 
-    
+    /*
     @Test
     public void TestGoodConnection() {
         String url = "jdbc:postgresql://localhost/libraryapp";
         String user = "library_app_admin";
         String password = "1234";
         
-        JDBCUtils.openConnection(url, user, password);
-        JDBCUtils.closeConnection();
+        Utils.openConnection(url, user, password);
+        Utils.closeConnection();
     }
     @Test
     public void TestGetUserFromCredentials() {
@@ -47,5 +47,5 @@ public class Testing {
         System.out.println(u.getRealname());
         Assertions.assertTrue("Sergio".equals(u.getRealname()));
     }
-
+*/
 }

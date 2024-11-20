@@ -1,0 +1,49 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table users {
+  userid integer [primary key]
+  username varchar
+  userpswd        varchar
+    realname        varchar
+    surname1        varchar
+    surname2        varchar
+    usertype        varchar
+}
+
+Table authors {
+  authorid        integer [primary key]
+    authorname      varchar
+    surname1        varchar
+    surname2        varchar
+    biography       varchar
+    nationality     varchar
+    yearbirth       integer
+}
+
+Table media {
+  workid                  integer [primary key]
+    title                   varchar
+    yearpublication         integer
+    mediatype               varchar
+    media_description       varchar
+}
+
+table media_creators  {
+    workid                  integer [primary key]
+    creatorid              integer [primary key]
+}
+
+TABLE loans {
+    workid              integer [primary key]
+    userid              integer
+    returned            boolean
+    date_start_loan     date
+    date_end_loan       date
+}
+
+Ref: media_creators.workid < media.workid
+Ref: media_creators.creatorid < authors.authorid
+
+Ref: loans.workid < media.workid
+Ref: loans.userid < users.userid

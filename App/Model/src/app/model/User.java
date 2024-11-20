@@ -14,17 +14,28 @@ public class User implements Serializable {
     private UserType type;      // Tipus d'usuari. OBLIGATORI. Pot ser user, admin o worker
     
     // MÉTODES
+
+    /**
+     * retorna el nom complet d'un autor, composat per realname + surname1 + surname 2
+     * @return
+     */
     
     public String getFullName() {
-        String fullName = getRealname() + " " + getSurname1();
+        String fullName = getRealname();
+        if (getSurname1() != null) {
+        fullName += " " + getSurname1();
+    }
         if (getSurname2() != null) {
             fullName += " " + getSurname2();
         }
         return fullName;
     }
-    /*
-    Converteix string txt a UserType
-    */
+    
+    /**
+     * Converteix string a l'usertype equivalent
+     * @param txt ha de ser igual a "USER" "ADMIN" o "WORKER"
+     * @return
+     */
     public static UserType stringToUserType(String txt) {
         if (txt.isBlank()) throw new ModelException("Error: no es pot convertir l'string a usertype");
         switch(txt) {
@@ -36,6 +47,17 @@ public class User implements Serializable {
     }
     
     // CONSTRUCTORS
+
+    /**
+     *
+     * @param id
+     * @param username
+     * @param password
+     * @param name
+     * @param surname1
+     * @param surname2
+     * @param type
+     */
     public User(int id, String username, String password, String name, String surname1, String surname2, UserType type) {
         setId(id);
         setUsername(username);
@@ -45,6 +67,17 @@ public class User implements Serializable {
         setSurname2(surname2);
         setType(type);
     }
+
+    /**
+     *
+     * @param id
+     * @param username
+     * @param password
+     * @param name
+     * @param surname1
+     * @param surname2
+     * @param type
+     */
     public User(int id, String username, String password, String name, String surname1, String surname2, String type) {
         setId(id);
         setUsername(username);
@@ -55,6 +88,15 @@ public class User implements Serializable {
         setType(stringToUserType(type));
     }
 
+    /**
+     *
+     * @param id
+     * @param username
+     * @param password
+     * @param name
+     * @param surname1
+     * @param type
+     */
     public User(int id, String username, String password, String name, String surname1, UserType type) {
         setId(id);
         setUsername(username);
@@ -63,6 +105,16 @@ public class User implements Serializable {
         setSurname1(surname1);
         setType(type);
     }
+
+    /**
+     *
+     * @param id
+     * @param username
+     * @param password
+     * @param name
+     * @param surname1
+     * @param type
+     */
     public User(int id, String username, String password, String name, String surname1, String type) {
         setId(id);
         setUsername(username);
@@ -72,7 +124,10 @@ public class User implements Serializable {
         setType(stringToUserType(type));
     }
     
-    
+    /**
+     *
+     * @return
+     */
     public String getTypeAsString() {
          if (type == UserType.ADMIN) return "ADMIN";
          else if (type == UserType.USER) return "USER";
@@ -80,41 +135,79 @@ public class User implements Serializable {
          else throw new ModelException("UserType incorrecte");
     }
     // GETTERS
+
+    /**
+     *
+     * @return
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getRealname() {
         return realname;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSurname1() {
         return surname1;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSurname2() {
         return surname2;
     }
 
+    /**
+     *
+     * @return
+     */
     public UserType getType() {
         return type;
     }
 
     // SETTERS
+
+    /**
+     *
+     * @param id
+     */
     public void setId(int id) {
         // ID ha de ser positiu , i únic
         if (id < 0) throw new ModelException("ERROR: ID ha de ser positiu");
         this.id = id;
     }
 
+    /**
+     *
+     * @param alias
+     */
     public void setUsername(String alias) {
         // Alias no pot ser null o buit
         if (alias == null) throw new ModelException("ERROR: Username no pot ser nul");
@@ -122,6 +215,10 @@ public class User implements Serializable {
         this.username = alias;
     }
 
+    /**
+     *
+     * @param password
+     */
     public void setPassword(String password) {
         // Contrasenya no pot ser null o buit
         if (password == null) throw new ModelException("ERROR: password no pot ser nul");
@@ -129,6 +226,10 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setRealname(String name) {
         // name no pot ser null o buit
         if (name == null) throw new ModelException("ERROR: name no pot ser nul");
@@ -136,6 +237,10 @@ public class User implements Serializable {
         this.realname = name;
     }
 
+    /**
+     *
+     * @param surname1
+     */
     public void setSurname1(String surname1) {
         // surname1 no pot ser null o buit
         if (surname1 == null) throw new ModelException("ERROR: surname1 no pot ser nul");
@@ -143,10 +248,18 @@ public class User implements Serializable {
         this.surname1 = surname1;
     }
 
+    /**
+     *
+     * @param surname2
+     */
     public void setSurname2(String surname2) {
         this.surname2 = surname2;
     }
 
+    /**
+     *
+     * @param type
+     */
     public void setType(UserType type) {
         // type no pot ser null
         if (type == null) throw new ModelException("ERROR : type no pot ser nul");
