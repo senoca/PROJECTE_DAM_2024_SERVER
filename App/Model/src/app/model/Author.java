@@ -25,7 +25,7 @@ public class Author implements Serializable {
 
     /**
      * Constructor de la classe Autor
-     * @param authorid identificador de l'autor
+     * @param authorid 
      * @param authorname nom de l'autor
      * @param biography breu biografia de l'autor
      * @param nationality nacionalitat de l'autor
@@ -67,13 +67,23 @@ public class Author implements Serializable {
      * @param nationality nacionalitat de l'autor
      * @param yearbirth any de naixement de l'autor
      */
+    public Author(String authorname, String surname1, String surname2, String biography, String nationality, int yearbirth) {
+        setAuthorname(authorname);
+        setSurname1(surname1);
+        setSurname2(surname2);
+        setBiography(biography);
+        setNationality(nationality);
+        setYearbirth(yearbirth);
+    }
+
     public Author(String authorname, String biography, String nationality, int yearbirth) {
         setAuthorname(authorname);
         setBiography(biography);
         setNationality(nationality);
         setYearbirth(yearbirth);
     }
-
+    
+    
     /**
      * Getter de authorid
      * @return authorid
@@ -207,5 +217,16 @@ public class Author implements Serializable {
         works.add(work);
     }
   */  
+
+    /**
+     *
+     * @return
+     */
+    public String getFullName() {
+        String fullName = authorname;
+        if (surname1 != null) fullName += " " + surname1;
+        if (surname2 != null) fullName += " " + surname2;
+        return fullName;
+    }
     
 }

@@ -173,8 +173,11 @@ public class DBUser {
                     + "values (?,?,?,?,?,?) "
                     + "returning userid";
             if (insertUserStatement == null) {
+                System.out.println("generant statement");
                 insertUserStatement = Utils.prepareStatement(statement);
             }
+            insertUserStatement = Utils.prepareStatement(statement);
+            System.out.println("preparant statement");
             insertUserStatement.setString(1, user.getUsername());
             insertUserStatement.setString(2, user.getPassword());
             insertUserStatement.setString(3, user.getRealname());
@@ -198,10 +201,11 @@ public class DBUser {
         try {
             String statement = "delete from users where userid = ?";
             if (deleteUserStatement == null) {
-                Utils.prepareStatement(statement);
+                deleteUserStatement = Utils.prepareStatement(statement);
             }
             deleteUserStatement.setInt(1, userid);
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             throw new ServerException(ex);
         }
     }
@@ -210,14 +214,14 @@ public class DBUser {
         try {
             String statement = "update USERS set "
                     + "username = ?,"
-                    + "userpsed = ?,"
+                    + "userpswd = ?,"
                     + "realname = ?,"
                     + "surname1 = ?,"
                     + "surname2 = ?,"
                     + "usertype = ? "
                     + "where userid = ? ";
             if (modifyUserStatement == null) {
-                Utils.prepareStatement(statement);
+                modifyUserStatement = Utils.prepareStatement(statement);
             }
             modifyUserStatement.setString(1, newUser.getUsername());
             modifyUserStatement.setString(2, newUser.getPassword());

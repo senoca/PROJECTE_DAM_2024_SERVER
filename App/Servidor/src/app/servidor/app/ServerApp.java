@@ -38,7 +38,7 @@ public class ServerApp {
                 System.out.println("Client connectat");
 
                 // Manejar cada cliente en un nuevo hilo
-                new Client(clientSocket, activeSessions).start();
+                new Client(serverSocket, clientSocket, activeSessions).start();
             }
 
         } catch (IOException e) {

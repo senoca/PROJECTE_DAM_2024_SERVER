@@ -28,6 +28,7 @@ public class MediaHandler {
                 
                 objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
                 objectOutput.writeObject((Object)allMedia);
+                objectOutput.flush();
             } catch (IOException ex) {
                 throw new ServerException(ex);
             } finally {
@@ -44,6 +45,7 @@ public class MediaHandler {
             Media media = DBMedia.getMediaById(mediaId);
             objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
             objectOutput.writeObject((Object) media);
+            objectOutput.flush();
         } catch (IOException ex) {
             throw new ServerException(ex);
         } finally {
@@ -87,6 +89,7 @@ public class MediaHandler {
                 int mediaId = DBMedia.insertNewMedia(media);
                 objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
                 objectOutput.writeInt(mediaId);
+                objectOutput.flush();
             } catch (IOException | ClassNotFoundException ex) {
                 throw new ServerException(ex);
             } finally {

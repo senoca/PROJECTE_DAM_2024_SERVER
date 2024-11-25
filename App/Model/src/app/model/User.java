@@ -3,7 +3,7 @@ package app.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    
+    private static final long serialVersionUID = 1;
     // ATRIBUTS
     private int id;             // Identificador numéric de l'usuari, OBLIGATORI
     private String username;       // Nom del perfil d'usuari al login, OBLIGATORI
@@ -88,6 +88,22 @@ public class User implements Serializable {
         setType(stringToUserType(type));
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @param name
+     * @param surname1
+     * @param type
+     */
+    public User( String username, String password, String name, String surname1, UserType type) {
+        setUsername(username);
+        setPassword(password);
+        setRealname(name);
+        setSurname1(surname1);
+        setType(type);
+    }
+    
     /**
      *
      * @param id

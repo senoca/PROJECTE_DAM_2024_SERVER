@@ -27,10 +27,17 @@ public class AuthorHandler {
 
     public static void getAllAuthors(Socket clientSocket) {
         ObjectOutputStream objectOutput = null;
+        System.out.println("Iniciant GetAllAuthors");
         try {
+            System.out.println("generant llista");
             ArrayList<Author> authors = DBAuthor.getAllAuthors();
+            System.out.println("llista generada");
             objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
+            System.out.println("canal output generat");
             objectOutput.writeObject((Object) authors);
+            System.out.println("llista enviada");
+            objectOutput.flush();
+            System.out.println("flush");
         } catch (IOException ex) {
             throw new ServerException(ex);
         } finally {
@@ -39,14 +46,21 @@ public class AuthorHandler {
     }
     
     public static void getAuthorById(Socket clientSocket) {
+        System.out.println("Executant authorHandler.getAuthorById");
             ObjectInputStream objectInput = null;
             ObjectOutputStream objectOutput = null;
             try {
                 objectInput = new ObjectInputStream(clientSocket.getInputStream());
                 int authorId = objectInput.readInt();
+                System.out.println("Rebuda ID: " + authorId);
                 Author author = DBAuthor.getAuthor(authorId);
+                if (author == null) System.out.println("No s'ha trobat cap autor amb ID " + authorId);
+                else System.out.println("S'ha trobat: " + author.getFullName());
+                System.out.println("Enviant author");
                 objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
                 objectOutput.writeObject((Object)author);
+                objectOutput.flush();
+                System.out.println("Autor enviat");
             } catch (IOException ex) {
                 throw new ServerException(ex);
             } finally {
@@ -59,14 +73,19 @@ public class AuthorHandler {
     public static void addNewAuthor(Socket clientSocket) {
         ObjectInputStream objectInput = null;
         ObjectOutputStream objectOutput = null;
+        System.out.println("Executant addNewAuthor");
         try {
+            System.out.println("Rebent nou autor");
             objectInput = new ObjectInputStream(clientSocket.getInputStream());
             Author author = (Author) objectInput.readObject();
+            System.out.println("Autor: " + author.getFullName());
             int authorId = DBAuthor.insertNewAuthor(author);
+            System.out.println("Inserit! ID generada: " + authorId);
             objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-            Utils.sendStringToClient("AUTHOR_CREATED", clientSocket);
-            //objectOutput.writeInt(authorId);
-            Utils.sendStringToClient(authorId + "", clientSocket);
+            //Utils.sendStringToClient("AUTHOR_CREATED", clientSocket);
+            objectOutput.writeInt(authorId);
+            objectOutput.flush();
+            //Utils.sendStringToClient(authorId + "", clientSocket);
         } catch (IOException | ClassNotFoundException ex) {
             Utils.sendStringToClient("ADD_AUTHOR_FAIL: " + ex.getMessage(), clientSocket);
             Utils.closeObjectInputStream(objectInput);

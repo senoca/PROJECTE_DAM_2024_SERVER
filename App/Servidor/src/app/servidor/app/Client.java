@@ -19,6 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import java.util.logging.Logger;
 public class Client extends Thread {
     
         private Socket clientSocket;
+        private ServerSocket serverSocket;
         private HashMap<String, User> activeSessions;
 
     /**
@@ -41,7 +43,8 @@ public class Client extends Thread {
      * @param socket socket per connectar amb el client
      * @param activeSessions hashmap dels usuaris connectats al servidor
      */
-    public Client(Socket socket, HashMap<String, User> activeSessions) {
+    public Client(ServerSocket serverSocket, Socket socket, HashMap<String, User> activeSessions) {
+            this.serverSocket = serverSocket;
             this.clientSocket = socket;
             this.activeSessions = activeSessions;
         }
@@ -52,16 +55,17 @@ public class Client extends Thread {
     @Override
         public void run() {
             try {
+                System.out.println("Iniciat thread client");
                 // Establecer timeout en el socket (30 segundos)
-                clientSocket.setSoTimeout(30000);
+                clientSocket.setSoTimeout(10000);
 
                 // He canviant les variables in i out a readFromClient i writeToClient respectivament, per més claretat de lectura
                 BufferedReader readFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter writeToClient = new PrintWriter(clientSocket.getOutputStream(), true);
-
+                System.out.println("Canals inicialitzats");
                 // Leer el comando del cliente
                 String command = readFromClient.readLine();
-                
+                System.out.println("Executant petició: " + command);
                 /*
                 PETICIONS LOGIN
                 */
@@ -105,19 +109,25 @@ public class Client extends Thread {
                 } else if ("ADD_USER".equals(command)) {
                     try {
                         UserHandler.addNewUser(clientSocket);
+                        Utils.commit();
                     } catch (ServerException ex){
+                        Utils.rollback();
                         System.out.println(ex.getMessage());
                     }
                 } else if ("DELETE_USER".equals(command)) {
                     try {
                         UserHandler.deleteUserById(clientSocket);
+                        Utils.commit();
                     } catch (ServerException ex){
+                        Utils.rollback();
                         System.out.println(ex.getMessage());
                     }
                 } else if ("MODIFY_USER".equals(command)) {
                     try {
                         UserHandler.modifyUser(clientSocket);
+                        Utils.commit();
                     } catch (ServerException ex){
+                        Utils.rollback();
                         System.out.println(ex.getMessage());
                     }
                 }     

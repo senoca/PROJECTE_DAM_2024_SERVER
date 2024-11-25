@@ -98,7 +98,7 @@ public class DBAuthor {
         Author author = null;
         try {
             String statement = ""
-                    + "select authorid, surname1, surname2, biography, nationality, yearbirth "
+                    + "select authorid, authorname, surname1, surname2, biography, nationality, yearbirth "
                     + "from authors "
                     + "where authorid = ?";
             if (insertAuthorDataStatement == null) {
@@ -121,11 +121,11 @@ public class DBAuthor {
     public static ArrayList<Author> getAllAuthors() {
         ArrayList<Author> authors = new ArrayList<>();
         String statement = ""
-                    + "select authorid, surname1, surname2, biography, nationality, yearbirth "
+                    + "select authorid, authorname, surname1, surname2, biography, nationality, yearbirth "
                     + "from authors";
         ResultSet rs = Utils.getSelect(statement);
         try {
-            if (rs.next()) {
+            while (rs.next()) {
                 Author a = buildAuthorObject(rs);
                 authors.add(a);
             }
