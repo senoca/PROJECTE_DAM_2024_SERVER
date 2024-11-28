@@ -4,7 +4,7 @@
  */
 package app.servidor.handler;
 
-import app.servidor.app.Client;
+import app.servidor.app.ClientThread;
 import app.model.Author;
 import app.model.Media;
 import app.model.User;

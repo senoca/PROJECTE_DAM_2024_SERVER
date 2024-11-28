@@ -21,7 +21,7 @@ public class Media implements Serializable {
     private Integer yearPublication;
     private MediaType mediaType;
     private String media_description;
-    private List<Author> authors;
+    private List<Author> authors = new ArrayList<Author>();
 
     /**
      *
@@ -35,7 +35,6 @@ public class Media implements Serializable {
         setYearPublication(yearPublication);
         setMediaType(mediaType);
         setMedia_description(media_description);
-        setAuthors(null);
     }
     
     /**
@@ -50,7 +49,6 @@ public class Media implements Serializable {
         setYearPublication(yearPublication);
         setMediaType(getMediaTypeFromString(mediaTypeAsString));
         setMedia_description(media_description);
-        setAuthors(null);
     }
     
     /**
@@ -67,7 +65,6 @@ public class Media implements Serializable {
         setYearPublication(yearPublication);
         setMediaType(mediaType);
         setMedia_description(media_description);
-        setAuthors(null);
     }
     
     /**
@@ -84,7 +81,6 @@ public class Media implements Serializable {
         setYearPublication(yearPublication);
         setMediaType(getMediaTypeFromString(mediaTypeAsString));
         setMedia_description(media_description);
-        setAuthors(null);
     }
 
     /**
@@ -252,17 +248,19 @@ public class Media implements Serializable {
             this.authors.add(author);
         }
     }
+    
+    public void addAuthors(ArrayList<Author> authors) 
+    {
+        if (authors != null) {
+            for (Author a : authors) addAuthor(a);
+        }
+    }
 
     /**
      * incorpora una llista d'autors a this.authors, i inicialitza this.authors. Si this.authors ja tenia autors abans, els esborra primer!
      * @param authors
      */
     public void setAuthors(List<Author> authors) {
-        if (this.authors == null) {
-            authors = new ArrayList<Author>();
-        } else {
-            this.authors.clear();
-        }
         if (authors != null) {
             for (Author author : authors) {
                 this.authors.add(author);

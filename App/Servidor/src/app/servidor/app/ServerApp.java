@@ -1,6 +1,6 @@
 package app.servidor.app;
 
-import app.servidor.app.Client;
+import app.servidor.app.ClientThread;
 import app.model.User;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class ServerApp {
                 System.out.println("Client connectat");
 
                 // Manejar cada cliente en un nuevo hilo
-                new Client(serverSocket, clientSocket, activeSessions).start();
+                new ClientThread(serverSocket, clientSocket, activeSessions).start();
             }
 
         } catch (IOException e) {

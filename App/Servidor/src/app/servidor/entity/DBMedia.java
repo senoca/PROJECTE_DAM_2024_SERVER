@@ -140,13 +140,15 @@ public class DBMedia {
     public static Media buildMediaObject(ResultSet rs) {
         Media media = null;
         try {
-            media = new Media(
-                    rs.getInt("workid"),
-                    rs.getString("title"),
-                    rs.getInt("yearpublication"),
-                    rs.getString("mediatype"),
-                    rs.getString("media_description")
-            );
+            if (rs.next()) {
+                media = new Media(
+                        rs.getInt("workid"),
+                        rs.getString("title"),
+                        rs.getInt("yearpublication"),
+                        rs.getString("mediatype"),
+                        rs.getString("media_description")
+                );
+            }
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
@@ -156,14 +158,16 @@ public class DBMedia {
     public static Media buildMediaObject(ResultSet rs, List<Author> authors) {
         Media media = null;
         try {
-            media = new Media(
-                    rs.getInt("workid"),
-                    rs.getString("title"),
-                    rs.getInt("yearpublication"),
-                    rs.getString("mediatype"),
-                    rs.getString("media_description"),
-                    authors
-            );
+            if (rs.next()) {
+                media = new Media(
+                        rs.getInt("workid"),
+                        rs.getString("title"),
+                        rs.getInt("yearpublication"),
+                        rs.getString("mediatype"),
+                        rs.getString("media_description"),
+                        authors
+                );
+            }
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
@@ -206,7 +210,7 @@ public class DBMedia {
     public static ArrayList<Author> getMediaAuthors(int mediaId) {
         ArrayList<Author> authors = new ArrayList<>();
         try {
-            
+            System.out.println("getMediaAuthors - Buscant autors...");
             String statement = "select authors.authorid, authors.authorname, authors.surname1, authors.surname2, authors.biography, authors.nationality, authors.yearbirth\n" +
                     "from authors\n" +
                     "join media_creators on authors.authorid = media_creators.creatorid\n" +
@@ -216,8 +220,9 @@ public class DBMedia {
             }
             selectAuthorOfMediaStatement.setInt(1, mediaId);
             ResultSet rs = selectAuthorOfMediaStatement.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Author a = DBAuthor.buildAuthorObject(rs);
+                System.out.println("getMediaAuthors - Autor trobat: " + a.getFullName());
                 authors.add(a);
             }
             

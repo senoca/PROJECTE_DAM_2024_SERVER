@@ -4,7 +4,7 @@
  */
 package app.servidor.handler;
 
-import app.servidor.app.Client;
+import app.servidor.app.ClientThread;
 import app.model.Media;
 import app.servidor.app.ServerException;
 import app.servidor.app.Utils;
@@ -40,12 +40,16 @@ public class MediaHandler {
         ObjectInputStream objectInput = null;
         ObjectOutputStream objectOutput = null;
         try {
+            System.out.println("Executant getMediaById");
             objectInput = new ObjectInputStream(clientSocket.getInputStream());
             int mediaId = objectInput.readInt();
+            System.out.println("ID: " + mediaId);
             Media media = DBMedia.getMediaById(mediaId);
+            System.out.println("Titol: " + media.getTitle());
             objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
             objectOutput.writeObject((Object) media);
             objectOutput.flush();
+            System.out.println("Media enviada a client");
         } catch (IOException ex) {
             throw new ServerException(ex);
         } finally {
