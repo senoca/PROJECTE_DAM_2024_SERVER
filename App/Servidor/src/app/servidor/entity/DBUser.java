@@ -65,7 +65,7 @@ public class DBUser {
 
         try {
             selectUserByIdStatement = Utils.prepareStatement(query);
-            selectUserByIdStatement.setString(1, Integer.toString(idToSearch));   // Sustituye el primer ? por el username
+            selectUserByIdStatement.setInt(1, idToSearch);   // Sustituye el primer ? por el username
 
             ResultSet rs = selectUserByIdStatement.executeQuery();
             
@@ -204,6 +204,7 @@ public class DBUser {
                 deleteUserStatement = Utils.prepareStatement(statement);
             }
             deleteUserStatement.setInt(1, userid);
+            deleteUserStatement.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             throw new ServerException(ex);

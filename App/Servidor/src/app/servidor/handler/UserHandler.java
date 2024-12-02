@@ -45,8 +45,9 @@ public class UserHandler {
             System.out.println("objectInput inicialitzat");
             int userId = 0; // inicialitzo la id que es buscarà
             userId = objectInput.readInt(); // el client enviarà pel socket un int, l'id d'usuari
-            System.out.println("objectInput llegit");
+            System.out.println("objectInput llegit. Id : " + userId);
             User user = DBUser.getUserById(userId);
+            System.out.println("Select executada");
             objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
             System.out.println("Trobat usuari");
             objectOutput.writeObject(user); // si no ha trobat l'usuari, user té valor null
@@ -55,11 +56,12 @@ public class UserHandler {
         } catch (IOException ex) {
             throw new ServerException(ex);
         } finally {
-            try {
+            if (objectInput != null) try {
                 objectInput.close();
+            } catch (Exception ex) {}
+            if (objectOutput != null) try {
                 objectOutput.close();
-            } catch (IOException ex) {
-            }
+            } catch (Exception ex) {}
         }
     }
     

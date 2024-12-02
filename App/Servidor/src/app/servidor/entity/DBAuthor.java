@@ -47,9 +47,10 @@ public class DBAuthor {
             */
             String statement = "delete from AUTHORS where authorid = ?";
             if (deleteAuthorStatement == null) {
-                Utils.prepareStatement(statement);
+                deleteAuthorStatement = Utils.prepareStatement(statement);
             }
             deleteAuthorStatement.setInt(1, authorId);
+            deleteAuthorStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
