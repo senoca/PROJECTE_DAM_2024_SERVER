@@ -19,8 +19,8 @@ INSERT INTO MEDIA (title, yearpublication, mediatype, media_description) values 
 INSERT INTO MEDIA (title, yearpublication, mediatype, media_description) values ('El Señor de los Anillos', 1954, 'BOOK', 'Fantasía');
 INSERT INTO MEDIA (title, yearpublication, mediatype, media_description) values ('Fuenteovejuna', 1619, 'BOOK', 'Obra de teatro');
 
+insert into media_creators (workid, creatorid) values (1, 1);
 insert into media_creators (workid, creatorid) values (2, 1);
 insert into media_creators (workid, creatorid) values (3, 3);
 insert into media_creators (workid, creatorid) values (4, 4);
-insert into media_creators (workid, creatorid) values (1, 1);
 

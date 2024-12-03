@@ -8,6 +8,7 @@ import app.servidor.app.ServerException;
 import app.servidor.app.Utils;
 import app.model.Author;
 import app.model.Media;
+import app.model.ModelException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -140,16 +141,14 @@ public class DBMedia {
     public static Media buildMediaObject(ResultSet rs) {
         Media media = null;
         try {
-            if (rs.next()) {
-                media = new Media(
+            media = new Media(
                         rs.getInt("workid"),
                         rs.getString("title"),
                         rs.getInt("yearpublication"),
                         rs.getString("mediatype"),
                         rs.getString("media_description")
                 );
-            }
-        } catch (SQLException ex) {
+        } catch ( ModelException | SQLException ex) {
             throw new ServerException(ex);
         }
         return media;
@@ -158,8 +157,7 @@ public class DBMedia {
     public static Media buildMediaObject(ResultSet rs, List<Author> authors) {
         Media media = null;
         try {
-            if (rs.next()) {
-                media = new Media(
+            media = new Media(
                         rs.getInt("workid"),
                         rs.getString("title"),
                         rs.getInt("yearpublication"),
@@ -167,7 +165,6 @@ public class DBMedia {
                         rs.getString("media_description"),
                         authors
                 );
-            }
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
@@ -184,7 +181,9 @@ public class DBMedia {
         try {
             selectMediaByIdStatement.setInt(1, mediaId);
             ResultSet rs = selectMediaByIdStatement.executeQuery();
-            media = buildMediaObject(rs, authors);
+            while (rs.next()) {
+                media = buildMediaObject(rs, authors);
+            }
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
@@ -192,14 +191,18 @@ public class DBMedia {
     }
     
     public static ArrayList<Media> getAllMedia() {
-        ArrayList<Media> allMedia = null;
+        ArrayList<Media> allMedia = new ArrayList<Media>();
         String statement = "select workid, title, yearpublication, mediatype, media_description from media";
+        System.out.println("preparant query");
         ResultSet rs = Utils.getSelect(statement);
+        System.out.println("query llençada");
         try {
-            if (rs.next()) {
+            while (rs.next()) {
+                System.out.println(rs.getInt("workid") + " " + rs.getString("title"));
                 Media media = buildMediaObject(rs);
                 ArrayList<Author> authors = getMediaAuthors(media.getWorkId());
                 media.setAuthors(authors);
+                allMedia.add(media);
             }
         } catch (SQLException ex) {
             throw new ServerException(ex);
@@ -210,7 +213,7 @@ public class DBMedia {
     public static ArrayList<Author> getMediaAuthors(int mediaId) {
         ArrayList<Author> authors = new ArrayList<>();
         try {
-            System.out.println("getMediaAuthors - Buscant autors...");
+            //System.out.println("getMediaAuthors - Buscant autors...");
             String statement = "select authors.authorid, authors.authorname, authors.surname1, authors.surname2, authors.biography, authors.nationality, authors.yearbirth\n" +
                     "from authors\n" +
                     "join media_creators on authors.authorid = media_creators.creatorid\n" +
@@ -222,7 +225,7 @@ public class DBMedia {
             ResultSet rs = selectAuthorOfMediaStatement.executeQuery();
             while (rs.next()) {
                 Author a = DBAuthor.buildAuthorObject(rs);
-                System.out.println("getMediaAuthors - Autor trobat: " + a.getFullName());
+                //System.out.println("getMediaAuthors - Autor trobat: " + a.getFullName());
                 authors.add(a);
             }
             

@@ -13,13 +13,14 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  *
  * @author Sergio
  */
-public class DemoGetMediaById {
+public class DemoGetAllMedia {
 
     /**
      * @param args the command line arguments
@@ -28,7 +29,7 @@ public class DemoGetMediaById {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Aquesta demo demostrarà la petició GET_MEDIA_BY_ID.");
+        System.out.println("Aquesta demo demostrarà la petició GET_ALL_MEDIA.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
         System.out.println("IP: " + ip.getHostAddress());
@@ -37,29 +38,29 @@ public class DemoGetMediaById {
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
         PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("GET_MEDIA_BY_ID");
+        writeToServer.println("GET_ALL_MEDIA");
         System.out.println("Petició enviada");
         
         
         int id = 1; // ID a cercar
         
-        System.out.println("Es demanarà el media amb ID " + id);
+        System.out.println("Es demanarà tot el media");
         
-        ObjectOutputStream objectOutput = new ObjectOutputStream(soc.getOutputStream());
         
-        objectOutput.writeInt(id);
-        objectOutput.flush();
-        System.out.println("ID enviada");
-        Media media = null;
+        
+        ArrayList<Media> allMedia = null;
         ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
-        media = (Media)objectInput.readObject();
-        if (media == null) System.out.println("No s'ha trobat cap media amb ID " + id);
+        allMedia = (ArrayList<Media>)objectInput.readObject();
+        if (allMedia == null) System.out.println("No s'ha trobat cap media");
         else {
-            System.out.print("ID: " + media.getWorkId() + " - Titol: " + media.getTitle() + " - Autors: ");
-                for (Author a : media.getAuthors()) {
+            for (Media m : allMedia)
+            {
+                System.out.print("   ID: " + m.getWorkId() + " Titol: " + m.getTitle() + " Autors: ");
+                for (Author a : m.getAuthors()) {
                     System.out.print(a.getFullName() + " ");
                 }
                 System.out.print("\n");
+            }
         }
         System.out.println("Tancant socket...");
         soc.close();

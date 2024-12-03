@@ -29,6 +29,12 @@ public class MediaHandler {
                 objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
                 objectOutput.writeObject((Object)allMedia);
                 objectOutput.flush();
+                if (allMedia != null) {
+                    for (Media m : allMedia) {
+                        System.out.println(m.getTitle());
+                }
+                }
+                
             } catch (IOException ex) {
                 throw new ServerException(ex);
             } finally {
@@ -40,16 +46,12 @@ public class MediaHandler {
         ObjectInputStream objectInput = null;
         ObjectOutputStream objectOutput = null;
         try {
-            System.out.println("Executant getMediaById");
             objectInput = new ObjectInputStream(clientSocket.getInputStream());
             int mediaId = objectInput.readInt();
-            System.out.println("ID: " + mediaId);
             Media media = DBMedia.getMediaById(mediaId);
-            System.out.println("Titol: " + media.getTitle());
             objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
             objectOutput.writeObject((Object) media);
             objectOutput.flush();
-            System.out.println("Media enviada a client");
         } catch (IOException ex) {
             throw new ServerException(ex);
         } finally {
