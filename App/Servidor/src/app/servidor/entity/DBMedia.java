@@ -44,8 +44,9 @@ public class DBMedia {
             insertNewMedia.setInt(2, media.getYearPublication());
             insertNewMedia.setString(3, media.getMediaTypeAsString());
             insertNewMedia.setString(4, media.getMedia_description());
-            insertMediaAuthor.execute();
-            ResultSet rs = insertMediaAuthor.getResultSet();
+            
+            insertNewMedia.execute();
+            ResultSet rs = insertNewMedia.getResultSet();
             if (rs.next()) {
                 mediaId = rs.getInt("workid");
             }
@@ -82,20 +83,21 @@ public class DBMedia {
         }
         try {
             deleteMediaByIdStatement.setInt(1, mediaId);
-            deleteMediaByIdStatement.executeQuery();
+            deleteMediaByIdStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
     }
     
     public static void deleteAllAuthorsFromMedia(int mediaId) {
+        System.out.println("executant deleteAllAuthorsFromMedia");
         String statement = "delete from media_creators where workid = ?";
         if (deleteAllAuthorsFromMediaStatement == null) {
             deleteAllAuthorsFromMediaStatement = Utils.prepareStatement(statement);
         }
         try {
             deleteAllAuthorsFromMediaStatement.setInt(1, mediaId);
-            deleteAllAuthorsFromMediaStatement.executeQuery();
+            deleteAllAuthorsFromMediaStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
@@ -104,12 +106,13 @@ public class DBMedia {
     
     public static void updateMedia(int mediaId, Media updatedMedia) {
         String statement = ""
-                + "update Media set "
-                + "title = ?,"
-                + "yearpublication = ?,"
-                + "mediatype = ?,"
-                + "media_description = ? "
-                + "where workid = ?";
+                +   "update Media \n" +
+                    "set\n" +
+                    "	title = ?,\n" +
+                    "	yearpublication = ?,\n" +
+                    "	mediatype = ?,\n" +
+                    "	media_description = ?\n" +
+                    "where workid = ?";
         
         if (updateMediaStatement == null) {
             updateMediaStatement = Utils.prepareStatement(statement);
@@ -120,22 +123,26 @@ public class DBMedia {
             updateMediaStatement.setInt(2, updatedMedia.getYearPublication());
             updateMediaStatement.setString(3, updatedMedia.getMediaTypeAsString());
             updateMediaStatement.setString(4, updatedMedia.getMedia_description());
-            updateMediaStatement.setInt(2, mediaId);
+            updateMediaStatement.setInt(5, mediaId);
             
             updateMediaStatement.executeUpdate();
-            
+            System.out.println("UpdateMedia executat");
             updateAuthorsFromMedia(mediaId, updatedMedia);
+            
         } catch (SQLException ex) {
             throw new ServerException(ex);
         }
     }
     
     private static void updateAuthorsFromMedia(int mediaId, Media updatedMedia) {
+        System.out.println("Executant updateAuthorsFromMedia");
         deleteAllAuthorsFromMedia(mediaId);
+        System.out.println("deleteAllAuthorsFromMedia executat");
         for(Author a : updatedMedia.getAuthors())
         {
             insertAuthorOfMedia(mediaId, a.getAuthorid());
         }
+        System.out.println("UpdateAuthorsFromMedia executat");
     }
     
     public static Media buildMediaObject(ResultSet rs) {

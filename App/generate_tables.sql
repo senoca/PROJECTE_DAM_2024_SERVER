@@ -69,3 +69,4 @@ GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;
 
 GRANT USAGE, SELECT ON SEQUENCE users_userid_seq TO library_app_admin;
 GRANT USAGE, SELECT ON SEQUENCE authors_authorid_seq TO library_app_admin;
+GRANT USAGE, SELECT ON SEQUENCE media_workid_seq TO library_app_admin;
