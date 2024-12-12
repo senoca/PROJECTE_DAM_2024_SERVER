@@ -56,6 +56,7 @@ public class LogHandler {
                     writeToClient.println("LOGIN_OK");
                     writeToClient.println("SESSION_ID:" + sessionId);
                     writeToClient.println("USER_TYPE:" + user.getType());
+                    writeToClient.println("USER_ID:" + user.getId());
                     System.out.println("Login exit\u00f2s per usuari: " + username + ", sessi\u00f3: " + sessionId);
                 } else {
                     // Devolver error si las credenciales no son válidas
@@ -80,6 +81,7 @@ public class LogHandler {
                 writeToClient.println(user.getSurname1());
                 writeToClient.println(user.getSurname2() != null ? user.getSurname2() : "");
                 writeToClient.println(user.getType());
+                writeToClient.println(user.getPassword());
                 System.out.println("Perfil enviat per la sessi\u00f3: " + sessionId);
             } else {
                 writeToClient.println("ERROR: Sessi\u00f3 no v\u00e1lida");

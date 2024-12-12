@@ -144,6 +144,30 @@ public class Media implements Serializable {
         else if (this.mediaType == MediaType.MAGAZINE) return "MAGAZINE";
         return "MULTIMEDIA";
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + this.workId;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Media other = (Media) obj;
+        return this.workId == other.workId;
+    }
+    
+    
     
     /**
      * 

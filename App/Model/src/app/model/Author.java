@@ -60,6 +60,30 @@ public class Author implements Serializable {
         //setWorks(works);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + this.authorid;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Author other = (Author) obj;
+        return this.authorid == other.authorid;
+    }
+
+    
+    
     /**
      * Constructor de la classe Autor
      * @param authorname nom de l'autor
