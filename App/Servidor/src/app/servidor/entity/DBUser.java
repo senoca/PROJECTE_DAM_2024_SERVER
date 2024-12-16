@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * DBUser guarda les funcions per administrar les consultes, altes, baixes o modificacions referents a la taula Users
+ * @author Sergio
+ */
 public class DBUser {
     
     private static PreparedStatement insertUserStatement = null;
@@ -20,18 +24,26 @@ public class DBUser {
     private static PreparedStatement modifyUserStatement = null;
     private static PreparedStatement selectUserByIdStatement = null;
     
-    /*
-    Busca si existex un usuari amb alies i pswd introduits, retorna true si existeix i false si no
-    */
+
+    /**
+     * Busca si existex un usuari amb alies i pswd introduits, retorna true si existeix i false si no
+     * @param alias
+     * @param pswd
+     * @return
+     */
+
     public static boolean UserExists(String alias, String pswd) {
         User u = getUserFromCredentials(alias, pswd);
         return u != null;
     }
-    
-    
-    /*
-    Busca un únic usuari amb alies i pswd introduits, retorna
-    */
+
+    /**
+     * Busca un únic usuari amb alies i pswd introduits, retorna user
+     * @param username
+     * @param pswd
+     * @return
+     */
+
     public static User getUserFromCredentials(String username, String pswd) {
         String query = "SELECT userid, username, userpswd, realname, surname1, surname2, usertype "
                      + "FROM users "
@@ -57,6 +69,11 @@ public class DBUser {
         return user;
     }
 
+    /**
+     * retorna un user cercant la id
+     * @param idToSearch
+     * @return
+     */
     public static User getUserById(int idToSearch) {
         String query = "SELECT userid, username, userpswd, realname, surname1, surname2, usertype "
                      + "FROM users "
@@ -81,6 +98,10 @@ public class DBUser {
         return user;
     }
     
+    /**
+     * retorna tots els usuaris de la bd
+     * @return
+     */
     public static List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
         String statement = "select userid, username, userpswd, realname, surname1, surname2, usertype\n" +
@@ -125,9 +146,13 @@ public class DBUser {
     }
     
     
-     /*
-    Método para obtener el tipo de usuario (USER o ADMIN) por username.
-    */
+
+    /**
+     * Método para obtener el tipo de usuario (USER o ADMIN) por username.
+     * @param username
+     * @return
+     */
+
     public static String getUserType(String username) {
         String query = "SELECT usertype FROM users WHERE username = ?";
         String userType = null;
@@ -150,7 +175,7 @@ public class DBUser {
     }
 
     /**
-     *
+     * insereix nou user a la db
      * @param user
      */
 
@@ -197,6 +222,10 @@ public class DBUser {
         return userid;
     }
     
+    /**
+     * esborra user de la db segons id
+     * @param userid
+     */
     public static void deleteUserById(int userid) {
         try {
             String statement = "delete from users where userid = ?";
@@ -211,6 +240,11 @@ public class DBUser {
         }
     }
     
+    /**
+     * sobreescriu les dades de user identificat per id amb les de newUser
+     * @param userId
+     * @param newUser
+     */
     public static void modifyUser(int userId, User newUser) {
         try {
             String statement = "update USERS set "

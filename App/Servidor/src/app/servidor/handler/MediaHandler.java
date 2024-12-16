@@ -16,11 +16,15 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- *
+ * Aquesta classe té les funcions per resoldre les peticions client-servidor relacionades amb media
  * @author Sergio
  */
 public class MediaHandler {
     
+    /**
+     * envia per socket una llista amb tot el media de la db
+     * @param clientSocket
+     */
     public static void getAllMedia(Socket clientSocket) {
             ObjectOutputStream objectOutput = null;
             try {
@@ -42,6 +46,10 @@ public class MediaHandler {
             }
         }
     
+    /**
+     * rep per socket un id, i envia al client la media corresponent
+     * @param clientSocket
+     */
     public static void getMediaById(Socket clientSocket) {
         ObjectInputStream objectInput = null;
         ObjectOutputStream objectOutput = null;
@@ -60,6 +68,10 @@ public class MediaHandler {
         }
     }
     
+    /**
+     * rep un media modificat i el sobreescriu a la bd amb les dades noves
+     * @param clientSocket
+     */
     public static void modifyMedia(Socket clientSocket) {
         ObjectInputStream objectInput = null;
         try {
@@ -73,6 +85,10 @@ public class MediaHandler {
         }
     }
     
+    /**
+     * rep un id i esborra el media corresponent
+     * @param clientSocket
+     */
     public static void deleteMedia(Socket clientSocket) {
             ObjectInputStream objectInput = null;
             try {
@@ -86,6 +102,10 @@ public class MediaHandler {
             }
         }
     
+    /**
+     * rep per socket un media nou, l'afegeix a la bd i retorna al client l'id generat
+     * @param clientSocket
+     */
     public static void addNewMedia(Socket clientSocket) {
             ObjectInputStream objectInput = null;
             ObjectOutputStream objectOutput = null;

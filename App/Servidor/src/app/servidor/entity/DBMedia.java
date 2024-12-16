@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * DBMEDIA guarda les funcions per administrar les consultes, altes, baixes o modificacions referents a la taula MEDIA
  * @author Sergio
  */
 public class DBMedia {
@@ -33,6 +33,11 @@ public class DBMedia {
     private static PreparedStatement deleteAllAuthorsFromMediaStatement = null;
     private static PreparedStatement deleteMediaByIdStatement = null;
     
+    /**
+     * insereix un nou media a la bd
+     * @param media
+     * @return
+     */
     public static int insertNewMedia(Media media) {
         String statement = "INSERT INTO MEDIA (title, yearpublication, mediatype, media_description) values (?, ?, ?, ?)  returning workid";
         int mediaId = -1;
@@ -60,6 +65,11 @@ public class DBMedia {
         return mediaId;
     }
     
+    /**
+     * insereix les relacions autor-obra corresponents a la taula media_creators
+     * @param mediaId
+     * @param authorId
+     */
     public static void insertAuthorOfMedia(int mediaId, int authorId) {
         String statement = "insert into media_creators (workid, creatorid) values (?, ?)";
         if (insertMediaAuthor == null) {
@@ -74,6 +84,10 @@ public class DBMedia {
         }
     }
     
+    /**
+     * esborra un media identificat per id de la bd
+     * @param mediaId
+     */
     public static void deleteMedia(int mediaId) {
         deleteAllAuthorsFromMedia(mediaId);
         
@@ -89,6 +103,10 @@ public class DBMedia {
         }
     }
     
+    /**
+     * esborra totes les relacions author-media de media_creators pel media identificat per id mediaID
+     * @param mediaId
+     */
     public static void deleteAllAuthorsFromMedia(int mediaId) {
         System.out.println("executant deleteAllAuthorsFromMedia");
         String statement = "delete from media_creators where workid = ?";
@@ -104,6 +122,11 @@ public class DBMedia {
         
     }
     
+    /**
+     * sobreescriu les dades d'un media identificat per id amb les dades de updatedMedia
+     * @param mediaId
+     * @param updatedMedia
+     */
     public static void updateMedia(int mediaId, Media updatedMedia) {
         String statement = ""
                 +   "update Media \n" +
@@ -145,6 +168,11 @@ public class DBMedia {
         System.out.println("UpdateAuthorsFromMedia executat");
     }
     
+    /**
+     * Crea un objecte Media a partir d'un resultset
+     * @param rs
+     * @return
+     */
     public static Media buildMediaObject(ResultSet rs) {
         Media media = null;
         try {
@@ -161,6 +189,12 @@ public class DBMedia {
         return media;
     }
     
+    /**
+     * Crea un objecte Media a partir d'un resultset i afegeix una llista d'autors com a creadors d'aquest media
+     * @param rs
+     * @param authors
+     * @return
+     */
     public static Media buildMediaObject(ResultSet rs, List<Author> authors) {
         Media media = null;
         try {
@@ -178,6 +212,11 @@ public class DBMedia {
         return media;
     }
     
+    /**
+     * retorna un media identificat per id
+     * @param mediaId
+     * @return
+     */
     public static Media getMediaById(int mediaId) {
         Media media = null;
         List<Author> authors = getMediaAuthors(mediaId);
@@ -197,6 +236,10 @@ public class DBMedia {
         return media;
     }
     
+    /**
+     * retorna un arraylist amb tot el media de la bd
+     * @return
+     */
     public static ArrayList<Media> getAllMedia() {
         ArrayList<Media> allMedia = new ArrayList<Media>();
         String statement = "select workid, title, yearpublication, mediatype, media_description from media";
@@ -217,6 +260,11 @@ public class DBMedia {
         return allMedia;
     }
     
+    /**
+     * retorna un arraylist amb tots els autors d'un media identificat per id
+     * @param mediaId
+     * @return
+     */
     public static ArrayList<Author> getMediaAuthors(int mediaId) {
         ArrayList<Author> authors = new ArrayList<>();
         try {

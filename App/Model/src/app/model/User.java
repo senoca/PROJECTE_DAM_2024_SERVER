@@ -2,6 +2,10 @@ package app.model;
 
 import java.io.Serializable;
 
+/**
+ * Classe que guarda les dades d'usuari
+ * @author Sergio
+ */
 public class User implements Serializable {
     private static final long serialVersionUID = 1;
     // ATRIBUTS
@@ -151,6 +155,10 @@ public class User implements Serializable {
          else throw new ModelException("UserType incorrecte");
     }
 
+    /**
+     * genera hashcode basat en id
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -158,6 +166,11 @@ public class User implements Serializable {
         return hash;
     }
 
+    /**
+     * compara dos users
+     * @param obj
+     * @return true o false segons si this.id == obj.id
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

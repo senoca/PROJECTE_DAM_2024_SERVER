@@ -43,7 +43,7 @@ public class DemoDeleteMedia {
         System.out.println("Petició enviada");
         
         
-        int id = 7;
+        int id = 8;
         
         
         System.out.println("El llibre a eliminar a crear és ID : " + id);

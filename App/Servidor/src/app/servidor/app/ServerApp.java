@@ -17,6 +17,10 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Aquesta classe és el main del servidor. Espera a que un client es connecti, i quan ho fa, genera un ClientThread
+ * @author Sergio
+ */
 public class ServerApp {
 
     // Mapa en memoria para almacenar las sesiones activas, con el identificador de sesión como clave.
@@ -29,16 +33,20 @@ public class ServerApp {
      */
     public static void main(String[] args) {
         int port = 12345;  // Puerto en el que escuchará el servidor
+        
+        int qtThread = 1;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Servidor de sockets escoltant en el port " + port);
 
             while (true) {
                 // Acepta la conexión del cliente
                 Socket clientSocket = serverSocket.accept();
+                System.out.println("--- " + qtThread +" ---");
                 System.out.println("Client connectat");
-
+                    
                 // Manejar cada cliente en un nuevo hilo
                 new ClientThread(serverSocket, clientSocket, activeSessions).start();
+                qtThread++;
             }
 
         } catch (IOException e) {

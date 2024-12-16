@@ -28,17 +28,27 @@ public class DBAuthor {
     private static PreparedStatement selectAuthorByIdStatement = null;
     private static PreparedStatement updateAuthorByIdStatement = null;
     
+    /**
+     * Insereix nous autors a la base de dades
+     * @param author autor a inserir
+     * @return id
+     */
     public static int insertNewAuthor(Author author) {
         if (author == null)
         {
             throw new ServerException("Error en insertNewAuthor: author nul");
         }
+        System.out.println("Inserint data");
         int authorID = insertNewAuthorData(author);
         //insertNewAuthorBibliography(author.getWorks());
         
         return authorID;
     }
     
+    /**
+     * Esborra un autor identificat per id de la base de dades.
+     * @param authorId id a esborrar
+     */
     public static void deleteAuthor(int authorId) {
         try {
             /*
@@ -56,6 +66,11 @@ public class DBAuthor {
         }
     }
     
+    /**
+     * Reescriu la informació de l'autor amb id authorid usant la informació de updatedAuthor
+     * @param authorId
+     * @param updatedAuthor
+     */
     public static void updateNewAuthor(int authorId, Author updatedAuthor) {
         try {
             String statement = ""
@@ -95,6 +110,13 @@ public class DBAuthor {
         return bibliography;
     }
     */
+
+    /**
+     * Retorna l'autor amb id authorId
+     * @param authorId
+     * @return
+     */
+
     public static Author getAuthor(int authorId) {
         Author author = null;
         try {
@@ -102,7 +124,7 @@ public class DBAuthor {
                     + "select authorid, authorname, surname1, surname2, biography, nationality, yearbirth "
                     + "from authors "
                     + "where authorid = ?";
-            if (insertAuthorDataStatement == null) {
+            if (selectAuthorByIdStatement == null) {
                 selectAuthorByIdStatement = Utils.prepareStatement(statement);
             }
             selectAuthorByIdStatement.setInt(1, authorId);
@@ -119,6 +141,10 @@ public class DBAuthor {
         return author;
     }
     
+    /**
+     * retorna una llista amb tots els autors de la bd
+     * @return
+     */
     public static ArrayList<Author> getAllAuthors() {
         ArrayList<Author> authors = new ArrayList<>();
         String statement = ""
@@ -171,15 +197,21 @@ public class DBAuthor {
         } 
         return authorId;
     }
-
+/*
     private static void insertNewAuthorBibliography(List<Media> works) {
-        /*
+  
         De moment he decidit que l'autoria de cada obra, s'introdueix al inserir 
         o modificar una obra, i no al inserir o modificar un autor.
         Si més endavant surt la necessitat, completar això.
-        */
+  
     }
-
+*/
+    
+    /**
+     * Retorna un objecte author creat amb la informació d'un ResultSet
+     * @param rs ResultSet
+     * @return author
+     */
     public static Author buildAuthorObject(ResultSet rs) {
         Author a = null;
         try {

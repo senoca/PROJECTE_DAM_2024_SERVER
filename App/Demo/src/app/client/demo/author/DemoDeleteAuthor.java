@@ -38,7 +38,7 @@ public class DemoDeleteAuthor {
         writeToServer.println("DELETE_AUTHOR");
         System.out.println("Petició enviada");
         
-        int authorId = 11;
+        int authorId = 35;
         
         System.out.println("L'autor a crear eliminar té ID : " + authorId);
         

@@ -20,11 +20,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * AuthorHandler resol totes les peticions client-usuari relacionades amb autors
  * @author Sergio
  */
 public class AuthorHandler {
 
+    /**
+     * envia per socket una llista amb tots els autors de la db
+     * @param clientSocket
+     */
     public static void getAllAuthors(Socket clientSocket) {
         ObjectOutputStream objectOutput = null;
         System.out.println("Iniciant GetAllAuthors");
@@ -45,6 +49,10 @@ public class AuthorHandler {
         }
     }
     
+    /**
+     * rep per socket un id, i retorna per socket l'autor corresponent
+     * @param clientSocket
+     */
     public static void getAuthorById(Socket clientSocket) {
         System.out.println("Executant authorHandler.getAuthorById");
             ObjectInputStream objectInput = null;
@@ -70,6 +78,10 @@ public class AuthorHandler {
             
         }
     
+    /**
+     * rep per socket un client autor, i l'afegeix al servidor
+     * @param clientSocket
+     */
     public static void addNewAuthor(Socket clientSocket) {
         ObjectInputStream objectInput = null;
         ObjectOutputStream objectOutput = null;
@@ -93,7 +105,10 @@ public class AuthorHandler {
         }
     }
     
-
+    /**
+     * rep per socket un client amb dades modificades, i el sobreescriu
+     * @param clientSocket
+     */
     public static void modifyAuthor(Socket clientSocket) {
         ObjectInputStream objectInput = null;
             try {
@@ -106,6 +121,11 @@ public class AuthorHandler {
                 Utils.closeObjectInputStream(objectInput);
             }
         }
+
+    /**
+     * rep per socket un id, i esborra de la bd el autor corresponent
+     * @param clientSocket
+     */
     public static void deleteAuthor(Socket clientSocket) {
         ObjectInputStream objectInput = null;
         try {

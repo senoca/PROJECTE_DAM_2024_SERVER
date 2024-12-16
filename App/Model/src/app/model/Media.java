@@ -90,7 +90,7 @@ public class Media implements Serializable {
      * @param yearPublication int any de publicació
      * @param mediaType enum mediatype, descriu tipus de media
      * @param media_description string descripció de l'obra
-     * @param authors arraylist<Author> llista d'autors
+     * @param authors arraylist Author llista d'autors
      */
     public Media(int workId, String title, Integer yearPublication, MediaType mediaType, String media_description, List<Author> authors) {
         setWorkId(workId);
@@ -108,7 +108,7 @@ public class Media implements Serializable {
      * @param yearPublication int any de publicació
      * @param mediaTypeAsString string convertible a mediatype
      * @param media_description string breu descripció de l'obra
-     * @param authors arraylist<Author> llista d'autors
+     * @param authors arraylist Author llista d'autors
      */
     public Media(int workId, String title, Integer yearPublication, String mediaTypeAsString, String media_description, List<Author> authors) {
         setWorkId(workId);
@@ -145,6 +145,10 @@ public class Media implements Serializable {
         return "MULTIMEDIA";
     }
 
+    /**
+     * genera hashcode a partir de id
+     * @return hashcode int
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -152,6 +156,11 @@ public class Media implements Serializable {
         return hash;
     }
 
+    /**
+     * compara el media amb obj
+     * @param obj media a comparar
+     * @return true or false segons si this.id == obj.id
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -170,31 +179,31 @@ public class Media implements Serializable {
     
     
     /**
-     * 
-     * @return
+     * getter id
+     * @return id
      */
     public int getWorkId() {
         return workId;
     }
 
     /**
-     *
-     * @param workId
+     * setter d'id
+     * @param workId nova id
      */
     public void setWorkId(int workId) {
         this.workId = workId;
     }
 
     /**
-     *
-     * @return
+     * getter title 
+     * @return string title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     *
+     * setter title
      * @param title no pot ser null o buit
      */
     public void setTitle(String title) {
@@ -205,8 +214,8 @@ public class Media implements Serializable {
     }
 
     /**
-     *
-     * @return
+     * 
+     * @return int yearPublication
      */
     public Integer getYearPublication() {
         return yearPublication;
@@ -214,22 +223,22 @@ public class Media implements Serializable {
 
     /**
      *
-     * @param yearPublication
+     * @param yearPublication nou yearpublication pel setter
      */
     public void setYearPublication(Integer yearPublication) {
         this.yearPublication = yearPublication;
     }
 
     /**
-     *
-     * @return
+     * getter
+     * @return mediaType
      */
     public MediaType getMediaType() {
         return mediaType;
     }
 
     /**
-     *
+     * setter
      * @param mediaType no pot ser null
      */
     public void setMediaType(MediaType mediaType) {
@@ -240,24 +249,24 @@ public class Media implements Serializable {
     }
 
     /**
-     *
-     * @return
+     * getter
+     * @return string media_description
      */
     public String getMedia_description() {
         return media_description;
     }
 
     /**
-     *
-     * @param media_description
+     * setter
+     * @param media_description string
      */
     public void setMedia_description(String media_description) {
         this.media_description = media_description;
     }
 
     /**
-     *
-     * @return
+     * getter
+     * @return List Author authors
      */
     public List<Author> getAuthors() {
         return authors;
@@ -273,6 +282,10 @@ public class Media implements Serializable {
         }
     }
     
+    /**
+     * Afegeix tots els autors de authors a this.authors
+     * @param authors ArrayList Author autors a afegir
+     */
     public void addAuthors(ArrayList<Author> authors) 
     {
         if (authors != null) {

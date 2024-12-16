@@ -43,7 +43,7 @@ public class DemoModifyMedia {
         System.out.println("Petició enviada");
         
         
-        Media m = new Media(7, "El Hòbbit", 1939, MediaType.BOOK, "Història d'en Bilbo Saquet");
+        Media m = new Media(8, "El Hòbbit", 1939, MediaType.BOOK, "Història d'en Bilbo Saquet");
         Author a = new Author(1, "John Ronald", "Tolkien", null, "Escritor de Fantasía", "Reino Unido", 1892);
         m.addAuthor(a);
         System.out.println("El llibre a modificar a crear és : " + m.getTitle());

@@ -14,11 +14,15 @@ import java.net.Socket;
 import java.util.List;
 
 /**
- *
+ * Aquesta classe conté les funcions per resoldre les peticions client-servidor relacionades amb usuaris
  * @author Sergio
  */
 public class UserHandler {
     
+    /**
+     * envia per socket una llista amb tots els usuaris
+     * @param clientSocket
+     */
     public static void getAllUsers(Socket clientSocket) {
             List<User> allUsers = DBUser.getAllUsers();
             ObjectOutputStream objectInput = null;
@@ -35,6 +39,11 @@ public class UserHandler {
                 } catch (IOException ex) {}
             }
         }
+
+    /**
+     * rep per socket un id i envia l'usuari corresponent
+     * @param clientSocket
+     */
     public static void getUserById(Socket clientSocket) {
         System.out.println("Executant getUserById");
         ObjectInputStream objectInput = null;
@@ -65,6 +74,10 @@ public class UserHandler {
         }
     }
     
+    /**
+     * rep un nou usuari i l'inserta a la base de dades, retorna per socket la nova id
+     * @param clientSocket
+     */
     public static void addNewUser(Socket clientSocket)
         {
             System.out.println("Inserint new user");
@@ -89,6 +102,11 @@ public class UserHandler {
                 } catch (IOException ex) {}
             }
         }
+
+    /**
+     * rep per socket un usuari modificat i el sobreescriu a la bd
+     * @param clientSocket
+     */
     public static void modifyUser(Socket clientSocket) {
             ObjectInputStream objectInput = null;
             try {
@@ -108,6 +126,10 @@ public class UserHandler {
             }
         }
     
+    /**
+     * rep per socket un id i esborra el usuari corresponent
+     * @param clientSocket
+     */
     public static void deleteUserById(Socket clientSocket)
         {
             ObjectInputStream objectInput = null;

@@ -4,10 +4,7 @@
  */
 package app.servidor.app;
 
-import app.model.Author;
-import app.model.Media;
 import app.model.User;
-import app.servidor.app.Utils;
 import app.servidor.handler.AuthorHandler;
 import app.servidor.handler.LogHandler;
 import app.servidor.handler.MediaHandler;
@@ -15,18 +12,10 @@ import app.servidor.handler.UserHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * La classe Client extén threads, i serveix per rebre les peticions d'un client

@@ -7,7 +7,7 @@ package app.model;
 import java.time.LocalDate;
 
 /**
- *
+ * Classe que emmagatzema els préstecs
  * @author Sergio
  */
 public class Loan {

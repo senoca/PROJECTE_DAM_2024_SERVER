@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Sergio
  * Aquesta classe guarda la informació referent a cada autor de les obres desades a la biblioteca
+ * @author 
+ * 
  */
 public class Author implements Serializable {
     private int authorid;
@@ -60,6 +60,10 @@ public class Author implements Serializable {
         //setWorks(works);
     }
 
+    /**
+     * Retorna un hashcode a partir de authorid
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -67,6 +71,11 @@ public class Author implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param obj l'autor a comparar
+     * @return true o false segons this.authorId == obj.authorId
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -87,6 +96,8 @@ public class Author implements Serializable {
     /**
      * Constructor de la classe Autor
      * @param authorname nom de l'autor
+     * @param surname1 cognom 1
+     * @param surname2 cognom 2
      * @param biography breu biografia de l'autor
      * @param nationality nacionalitat de l'autor
      * @param yearbirth any de naixement de l'autor
@@ -100,6 +111,14 @@ public class Author implements Serializable {
         setYearbirth(yearbirth);
     }
 
+    /**
+     *
+     Constructor de la classe Autor
+     * @param authorname nom de l'autor
+     * @param biography breu biografia de l'autor
+     * @param nationality nacionalitat de l'autor
+     * @param yearbirth any de naixement de l'autor
+     */
     public Author(String authorname, String biography, String nationality, int yearbirth) {
         setAuthorname(authorname);
         setBiography(biography);
@@ -196,7 +215,7 @@ public class Author implements Serializable {
 
     /**
      * getter de nationality
-     * @return
+     * @return nationality
      */
     public String getNationality() {
         return nationality;
@@ -243,8 +262,8 @@ public class Author implements Serializable {
   */  
 
     /**
-     *
-     * @return
+     * retorna el nom complet com a string
+     * @return authorname + surname1 + surname2 com a un sol string
      */
     public String getFullName() {
         String fullName = authorname;

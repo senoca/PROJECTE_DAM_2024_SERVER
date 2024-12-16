@@ -14,11 +14,17 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- *
+ * Aquesta classe conté les funcions relacionades amb login i logout
  * @author Sergio
  */
 public class LogHandler {
 
+    /**
+     *
+     * @param activeSessions
+     * @param readFromClient
+     * @param writeToClient
+     */
     public static void logout(HashMap<String, User> activeSessions, BufferedReader readFromClient, PrintWriter writeToClient) {
         try {
             // Manejar el proceso de logout
@@ -36,6 +42,12 @@ public class LogHandler {
         }
     }
 
+    /**
+     *
+     * @param activeSessions
+     * @param readFromClient
+     * @param writeToClient
+     */
     public static void login(HashMap<String, User> activeSessions, BufferedReader readFromClient, PrintWriter writeToClient) {
         try {
             // Proceso de login
@@ -69,6 +81,12 @@ public class LogHandler {
         }
     }
 
+    /**
+     *
+     * @param activeSessions
+     * @param readFromClient
+     * @param writeToClient
+     */
     public static void getProfile(HashMap<String, User> activeSessions, BufferedReader readFromClient, PrintWriter writeToClient) {
         try {
             // Comando para obtener el perfil del usuario

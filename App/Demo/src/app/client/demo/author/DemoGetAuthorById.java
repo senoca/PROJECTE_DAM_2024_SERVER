@@ -40,7 +40,7 @@ public class DemoGetAuthorById {
         System.out.println("Petició enviada");
         
         
-        int id = 33; // ID a cercar
+        int id = 2; // ID a cercar
         
         System.out.println("Es demanarà l'autor amb ID " + id);
         

@@ -38,7 +38,7 @@ public class DemoModifyAuthor {
         PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
         writeToServer.println("MODIFY_AUTHOR");
         System.out.println("Petició enviada");
-        Author a = new Author(11, "Sergio", "Noya", "Cambeiro", "Un escriptor amb futur!", "Espanya", 1997);
+        Author a = new Author(35, "Sergio", "Noya", "Cambeiro", "Un escriptor amb futur!", "Espanya", 1997);
         
         System.out.println("L'autor a crear és : " + a.getFullName());
         
