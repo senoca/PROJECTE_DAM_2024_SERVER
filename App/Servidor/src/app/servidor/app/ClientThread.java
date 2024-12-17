@@ -4,6 +4,7 @@
  */
 package app.servidor.app;
 
+import app.crypto.CryptoUtils;
 import app.model.User;
 import app.servidor.handler.AuthorHandler;
 import app.servidor.handler.LogHandler;
@@ -23,7 +24,7 @@ import java.util.HashMap;
  */
 public class ClientThread extends Thread {
     
-        private Socket clientSocket;
+        private Socket soc;
         private ServerSocket serverSocket;
         private HashMap<String, User> activeSessions;
 
@@ -34,7 +35,7 @@ public class ClientThread extends Thread {
      */
     public ClientThread(ServerSocket serverSocket, Socket socket, HashMap<String, User> activeSessions) {
             this.serverSocket = serverSocket;
-            this.clientSocket = socket;
+            this.soc = socket;
             this.activeSessions = activeSessions;
         }
         
@@ -46,34 +47,36 @@ public class ClientThread extends Thread {
             try {
                 System.out.println("Iniciat thread client");
                 // Establecer timeout en el socket (30 segundos)
-                clientSocket.setSoTimeout(10000);
+                soc.setSoTimeout(10000);
 
                 // He canviant les variables in i out a readFromClient i writeToClient respectivament, per més claretat de lectura
-                BufferedReader readFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter writeToClient = new PrintWriter(clientSocket.getOutputStream(), true);
+                //BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+                //PrintWriter writeToClient = new PrintWriter(soc.getOutputStream(), true);
                 System.out.println("Canals inicialitzats");
                 // Leer el comando del cliente
-                String command = readFromClient.readLine();
+                String pswd = CryptoUtils.getGenericPassword();
+                //String command = readFromClient.readLine();
+                String command = CryptoUtils.readString(soc.getInputStream(), pswd);
                 System.out.println("Executant petició: " + command);
                 /*
                 PETICIONS LOGIN
                 */
                 if ("LOGOUT".equals(command)) {
                     try {
-                        LogHandler.logout(activeSessions, readFromClient, writeToClient);
+                        //LogHandler.logout(activeSessions, readFromClient, writeToClient);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                     
                 } else if ("LOGIN".equals(command)) {
                     try {
-                        LogHandler.login(activeSessions, readFromClient, writeToClient);
+                        //LogHandler.login(activeSessions, readFromClient, writeToClient);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_PROFILE".equals(command)) {
                     try {
-                        LogHandler.getProfile(activeSessions, readFromClient, writeToClient);
+                        //LogHandler.getProfile(activeSessions, readFromClient, writeToClient);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -85,19 +88,19 @@ public class ClientThread extends Thread {
                 
                 else if ("GET_ALL_USERS".equals(command)) {
                     try {
-                        UserHandler.getAllUsers(clientSocket);
+                        UserHandler.getAllUsers(soc);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_USER_BY_ID".equals(command)) {
                     try {
-                        UserHandler.getUserById(clientSocket);
+                        UserHandler.getUserById(soc);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("ADD_USER".equals(command)) {
                     try {
-                        UserHandler.addNewUser(clientSocket);
+                        UserHandler.addNewUser(soc);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -105,7 +108,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("DELETE_USER".equals(command)) {
                     try {
-                        UserHandler.deleteUserById(clientSocket);
+                        UserHandler.deleteUserById(soc);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -113,7 +116,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_USER".equals(command)) {
                     try {
-                        UserHandler.modifyUser(clientSocket);
+                        UserHandler.modifyUser(soc);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -125,19 +128,19 @@ public class ClientThread extends Thread {
                 */    
                 else if ("GET_ALL_AUTHORS".equals(command)){
                     try {
-                        AuthorHandler.getAllAuthors(clientSocket);
+                        AuthorHandler.getAllAuthors(soc);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_AUTHOR_BY_ID".equals(command)) {
                     try {
-                        AuthorHandler.getAuthorById(clientSocket);
+                        AuthorHandler.getAuthorById(soc, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("ADD_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.addNewAuthor(clientSocket);
+                        AuthorHandler.addNewAuthor(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
                         System.out.println(ex.getMessage());
@@ -149,7 +152,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.modifyAuthor(clientSocket);
+                        AuthorHandler.modifyAuthor(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
                         System.out.println(ex.getMessage());
@@ -161,7 +164,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("DELETE_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.deleteAuthor(clientSocket);
+                        AuthorHandler.deleteAuthor(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
                         System.out.println(ex.getMessage());
@@ -177,19 +180,19 @@ public class ClientThread extends Thread {
                 */
                 else if ("GET_ALL_MEDIA".equals(command)){
                     try {
-                        MediaHandler.getAllMedia(clientSocket);
+                        MediaHandler.getAllMedia(soc);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_MEDIA_BY_ID".equals(command)) {
                     try {
-                        MediaHandler.getMediaById(clientSocket);
+                        MediaHandler.getMediaById(soc);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("ADD_MEDIA".equals(command)) {
                     try {
-                        MediaHandler.addNewMedia(clientSocket);
+                        MediaHandler.addNewMedia(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
                         System.out.println(ex.getMessage());
@@ -201,7 +204,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_MEDIA".equals(command)) {
                     try {
-                        MediaHandler.modifyMedia(clientSocket);
+                        MediaHandler.modifyMedia(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
                         System.out.println(ex.getMessage());
@@ -213,7 +216,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("DELETE_MEDIA".equals(command)) {
                     try {
-                        MediaHandler.deleteMedia(clientSocket);
+                        MediaHandler.deleteMedia(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
                         System.out.println(ex.getMessage());
@@ -226,7 +229,8 @@ public class ClientThread extends Thread {
                 }
                 else {
                     // Comando no reconocido
-                    writeToClient.println("ERROR: Ordre no reconeguda");
+                    CryptoUtils.sendString(soc.getOutputStream(), pswd, "ERROR: Ordre no reconeguda");
+//                    writeToClient.println("ERROR: Ordre no reconeguda");
                     System.err.println("Error: Ordre no reconeguda: " + command);
                 }
 
@@ -238,7 +242,9 @@ public class ClientThread extends Thread {
                 }
             } finally {
                 try {
-                    clientSocket.close();  // Cerrar la conexión con el cliente
+                    
+                    soc.close();  // Cerrar la conexión con el cliente
+                    System.out.println("Socket tancat");
                 } catch (IOException e) {
                     System.err.println("Error al tancar la conexió amb el client: " + e.getMessage());
                 }

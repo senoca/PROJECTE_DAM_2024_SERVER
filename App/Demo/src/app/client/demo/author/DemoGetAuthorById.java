@@ -4,6 +4,7 @@
  */
 package app.client.demo.author;
 
+import app.crypto.CryptoUtils;
 import app.model.Author;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +27,9 @@ public class DemoGetAuthorById {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
+        String pswd = CryptoUtils.getGenericPassword();
         Scanner scanner = new Scanner(System.in);
+        String petition = "GET_AUTHOR_BY_ID";
         System.out.println("Aquesta demo demostrarà la petició GET_AUTHOR_BY_ID.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
@@ -35,8 +38,8 @@ public class DemoGetAuthorById {
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("GET_AUTHOR_BY_ID");
+        CryptoUtils.sendString(soc.getOutputStream(), petition, pswd);
+        
         System.out.println("Petició enviada");
         
         
@@ -44,14 +47,12 @@ public class DemoGetAuthorById {
         
         System.out.println("Es demanarà l'autor amb ID " + id);
         
-        ObjectOutputStream objectOutput = new ObjectOutputStream(soc.getOutputStream());
         
-        objectOutput.writeInt(id);
-        objectOutput.flush();
+        
+        CryptoUtils.sendInt(soc.getOutputStream(), id, pswd);
         System.out.println("ID enviada");
         Author author = null;
-        ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
-        author = (Author)objectInput.readObject();
+        //author = (Author)CryptoUtils.readObject(soc.getInputStream(), pswd);
         if (author == null) System.out.println("No s'ha trobat cap autor amb ID " + id);
         else System.out.println("S'ha trobat: " + author.getFullName());
         System.out.println("Tancant socket...");

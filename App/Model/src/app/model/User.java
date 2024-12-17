@@ -24,6 +24,8 @@ public class User implements Serializable {
      * @return
      */
     
+    
+    
     public String getFullName() {
         String fullName = getRealname();
         if (getSurname1() != null) {

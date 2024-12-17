@@ -4,6 +4,7 @@
  */
 package app.servidor.handler;
 
+import app.crypto.CryptoUtils;
 import app.servidor.app.ClientThread;
 import app.model.Author;
 import app.model.Media;
@@ -77,6 +78,30 @@ public class AuthorHandler {
             }
             
         }
+    
+    /**
+     * VERSIÓ CRYPTO 
+     * rep per socket un id, i retorna per socket l'autor corresponent
+     * @param soc
+     * @param pswd contrasenya per encriptació
+     */
+    public static void getAuthorById(Socket soc, String pswd) {
+        System.out.println("Executant authorHandler.getAuthorById");
+        try {
+            
+            int authorId = CryptoUtils.readInt(soc.getInputStream(), pswd);
+            System.out.println("Rebuda ID: " + authorId);
+            Author author = DBAuthor.getAuthor(authorId);
+            if (author == null) System.out.println("No s'ha trobat cap autor amb ID " + authorId);
+            else System.out.println("S'ha trobat: " + author.getFullName());
+            System.out.println("Enviant author");
+            
+            //CryptoUtils.sendObject(soc.getOutputStream(), author, pswd);
+            System.out.println("Autor enviat");
+        } catch (Exception ex) {
+            throw new ServerException(ex);
+        }
+    }
     
     /**
      * rep per socket un client autor, i l'afegeix al servidor
