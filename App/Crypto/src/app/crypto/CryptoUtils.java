@@ -50,6 +50,7 @@ public class CryptoUtils {
     }
     
     private static byte[] encryptObject(Object obj, SecretKey key) {
+        System.out.println("Encrypting object");
         byte[] encryptedObj = null;
         try {
             byte[] serializedObj = serializeObject(obj);
@@ -57,13 +58,14 @@ public class CryptoUtils {
             cipher.init(Cipher.ENCRYPT_MODE, key);
             encryptedObj = cipher.doFinal(serializedObj);
         } catch (BadPaddingException | IllegalBlockSizeException | InvalidKeyException| NoSuchPaddingException | NoSuchAlgorithmException | IOException ex) {
-            throw new CryptoException(ex.getMessage());
+            throw new CryptoException(ex);
         }
         return encryptedObj;
     }
     
     private static byte[] serializeObject(Object obj) throws IOException {
-        if (obj == null) throw new CryptoException("Object is null");
+        System.out.println("Serializing Object");
+        if (obj == null) return null;
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         try (ObjectOutputStream objectStream = new ObjectOutputStream(byteStream)) {
             objectStream.writeObject(obj);
@@ -72,6 +74,8 @@ public class CryptoUtils {
     }
     
     private static Object deserializeObject(byte[] byteArray) throws IOException, ClassNotFoundException {
+        System.out.println("Deserializing Object");
+        if (byteArray == null) return null;
         try (ObjectInputStream objectStream = new ObjectInputStream(new ByteArrayInputStream(byteArray))) {
             return objectStream.readObject();
         }
@@ -79,31 +83,35 @@ public class CryptoUtils {
     
         
     private static Object decryptObject(byte[] encryptedObj, SecretKey key) {
+        System.out.println("Decrypting Object");
         Object decryptedObj = null;
+        if (encryptedObj == null) return null;
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
             byte[] serializedObj = cipher.doFinal(encryptedObj);
             decryptedObj = deserializeObject(serializedObj);
         } catch (ClassNotFoundException | BadPaddingException | IllegalBlockSizeException | InvalidKeyException| NoSuchPaddingException | NoSuchAlgorithmException | IOException ex) {
-            throw new CryptoException(ex.getMessage());
+            throw new CryptoException(ex);
         }
         return decryptedObj;
     }
     
     private static byte[] encryptString(String txt, SecretKey key) {
+        System.out.println("encryptString");
         byte[] data = null;
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, key);
             data = cipher.doFinal(txt.getBytes("UTF-8"));
         } catch (BadPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException ex) {
-            throw new CryptoException(ex.getMessage());
+            throw new CryptoException(ex);
         }
         return data;
     }
     
     private static String decryptString(byte[] data, SecretKey key) {
+        System.out.println("Decrypting String");
         String txt = null;
         try {    
             Cipher cipher = Cipher.getInstance("AES");
@@ -111,40 +119,36 @@ public class CryptoUtils {
             byte[] decryptedBytes = cipher.doFinal(data);
             txt = new String(decryptedBytes, "UTF-8");
         } catch (NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException ex) {
-            throw new CryptoException(ex.getMessage());
+            throw new CryptoException(ex);
         }
         return txt;
     }
     
-    private static byte[] encryptInt(int n, SecretKey key) {
-        System.out.println("Encrypting " + n);
-        byte[] data = encryptString(Integer.toString(n), key);
-        return data;
-    }
-    
-    private static int decryptInt(byte[] data, SecretKey key) {
+    private static String byteToB64(byte[] data) {
         try {
-            String nm = decryptString(data, key);
-            int n = Integer.getInteger(nm);
-            System.out.println("Decrypted " + n);
-            return n;
+            System.out.println("byteToB64. Data: " + data.toString());
+            String base64 = Base64.getEncoder().encodeToString(data);
+            return base64;        
         } catch (Exception ex) {
-            throw new CryptoException(ex.getMessage());
+            throw new CryptoException(ex);
         }
         
     }
     
-    private static String byteToB64(byte[] data) {
-        String base64 = Base64.getEncoder().encodeToString(data);
-        return base64;        
-    }
-    
     private static byte[] b64ToByte(String base64) {
-        byte[] data = Base64.getDecoder().decode(base64);
-        return data;
+        try {
+            System.out.println("b64ToByte. Data: " + base64);
+            byte[] data = Base64.getDecoder().decode(base64);
+            return data;      
+        } catch (Exception ex) {
+            throw new CryptoException(ex);
+        }
+        
+        
     }
     
     public static void sendString(OutputStream out, String txt, String pswd) throws IOException {
+        System.out.println("Sending String");
         PrintWriter writeToServer = new PrintWriter(out, true);    
         
             SecretKey key = generateKeyFromPassword(pswd);
@@ -156,6 +160,7 @@ public class CryptoUtils {
     }
     
     public static String readString(InputStream in, String pswd) throws IOException {
+        System.out.println("readString");
         SecretKey key = generateKeyFromPassword(pswd);
         BufferedReader readFromClient = new BufferedReader(new InputStreamReader(in));
         String txt = null;
@@ -169,53 +174,50 @@ public class CryptoUtils {
     }
     
     public static void sendInt(OutputStream out, int n, String pswd) throws IOException {
+        System.out.println("Sending Int");
         String nm = Integer.toString(n);
         sendString(out, nm, pswd);
-        /*
-        ObjectOutputStream stream = new ObjectOutputStream(out);
-        SecretKey key = generateKeyFromPassword(pswd);
-        
-            byte[] data = encryptInt(n, key);
-            stream.write(data);
-            stream.flush();
-        */
-        
     }
     
     public static int readInt(InputStream in, String pswd) throws IOException {
+        System.out.println("Reading Int");
         String nm = readString(in, pswd);
-        int n = Integer.getInteger(nm);
-        
-        /*
-        System.out.println("readInt");
-        ObjectInputStream stream = new ObjectInputStream(in);
-        System.out.println("Stream generat");
-        SecretKey key = generateKeyFromPassword(pswd);
-        byte[] data = stream.readAllBytes();
-        System.out.println("Data: " + data);
-        int n = decryptInt(data, key);
-        System.out.println("int: " + n);*/
+        int n = Integer.parseInt(nm);
         return n;
+        
     }
     
     public static void sendObject(OutputStream out, Object obj, String pswd) throws IOException {
-        ObjectOutputStream stream = new ObjectOutputStream(out);
-        SecretKey key = generateKeyFromPassword(pswd);
-        
+         try {
+            System.out.println("Sending object");
+            ObjectOutputStream stream = new ObjectOutputStream(out);
+            SecretKey key = generateKeyFromPassword(pswd);
             byte[] data = encryptObject(obj, key);
             stream.write(data);
             stream.flush();
+            System.out.println("Object sent");
+        } catch (Exception ex) {
+            throw new CryptoException(ex);
+        }
         
     }
     
     public static Object readObject(InputStream in, String pswd) throws IOException {
-        ObjectInputStream stream = new ObjectInputStream(in);
-        SecretKey key = generateKeyFromPassword(pswd);
-        
+        System.out.println("Reading object");
+        try {
+            ObjectInputStream stream = new ObjectInputStream(in);
+            SecretKey key = generateKeyFromPassword(pswd);
+            System.out.println("readObject: ready to read data");
             byte[] data = stream.readAllBytes();
+            System.out.println("readObject: data read");
             System.out.println(data);
             Object obj = decryptObject(data, key);
+            System.out.println("Object read");
             return obj;
+        } catch (Exception ex) {
+            throw new CryptoException(ex);
+        }
+        
         
     }
     

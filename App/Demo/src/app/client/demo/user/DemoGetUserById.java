@@ -4,6 +4,7 @@
  */
 package app.client.demo.user;
 
+import app.crypto.CryptoUtils;
 import app.model.User;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,6 +28,8 @@ public class DemoGetUserById {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String pswd = CryptoUtils.getGenericPassword();
+        String txt = "GET_USER_BY_ID";
         System.out.println("Aquesta demo demostrarà la petició GET_USER_BY_ID.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
@@ -35,22 +38,20 @@ public class DemoGetUserById {
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("GET_USER_BY_ID");
+        CryptoUtils.sendString(soc.getOutputStream(), txt, pswd);
         System.out.println("Petició enviada");
         
         int userId = 1;
         
         System.out.println("L'usuari a cercar té ID : " + userId);
-        
-        ObjectOutputStream objOut = new ObjectOutputStream(soc.getOutputStream());
-        objOut.writeInt(userId);
-        objOut.flush();
+        CryptoUtils.sendInt(soc.getOutputStream(), userId, pswd);
         System.out.println("ID enviada");
         
-        ObjectInputStream objIn = new ObjectInputStream(soc.getInputStream());
-        User user = null;
-        user = (User) objIn.readObject();
+        
+        
+        
+        User user = (User) CryptoUtils.readObject(soc.getInputStream(), pswd);
+        
         System.out.println("L'usuari és " + user.getFullName());
         
         

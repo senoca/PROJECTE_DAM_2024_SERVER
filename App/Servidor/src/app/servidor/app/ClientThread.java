@@ -24,7 +24,7 @@ import java.util.HashMap;
  */
 public class ClientThread extends Thread {
     
-        private Socket soc;
+        private final Socket soc;
         private ServerSocket serverSocket;
         private HashMap<String, User> activeSessions;
 
@@ -44,7 +44,7 @@ public class ClientThread extends Thread {
      */
     @Override
         public void run() {
-            try {
+            try (soc) {
                 System.out.println("Iniciat thread client");
                 // Establecer timeout en el socket (30 segundos)
                 soc.setSoTimeout(10000);
@@ -88,13 +88,13 @@ public class ClientThread extends Thread {
                 
                 else if ("GET_ALL_USERS".equals(command)) {
                     try {
-                        UserHandler.getAllUsers(soc);
+                        UserHandler.getAllUsers(soc, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_USER_BY_ID".equals(command)) {
                     try {
-                        UserHandler.getUserById(soc);
+                        UserHandler.getUserById(soc, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -128,22 +128,22 @@ public class ClientThread extends Thread {
                 */    
                 else if ("GET_ALL_AUTHORS".equals(command)){
                     try {
-                        AuthorHandler.getAllAuthors(soc);
+                        AuthorHandler.getAllAuthors(soc, pswd);
                     } catch (ServerException ex){
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 } else if ("GET_AUTHOR_BY_ID".equals(command)) {
                     try {
                         AuthorHandler.getAuthorById(soc, pswd);
                     } catch (ServerException ex){
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 } else if ("ADD_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.addNewAuthor(soc);
+                        AuthorHandler.addNewAuthor(soc, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                         try {
                             Utils.rollback();
                         } catch (Exception exep) {
@@ -155,7 +155,7 @@ public class ClientThread extends Thread {
                         AuthorHandler.modifyAuthor(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                         try {
                             Utils.rollback();
                         } catch (Exception exep) {
@@ -167,7 +167,7 @@ public class ClientThread extends Thread {
                         AuthorHandler.deleteAuthor(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                         try {
                             Utils.rollback();
                         } catch (Exception exep) {
@@ -180,22 +180,22 @@ public class ClientThread extends Thread {
                 */
                 else if ("GET_ALL_MEDIA".equals(command)){
                     try {
-                        MediaHandler.getAllMedia(soc);
+                        MediaHandler.getAllMedia(soc, pswd);
                     } catch (ServerException ex){
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 } else if ("GET_MEDIA_BY_ID".equals(command)) {
                     try {
-                        MediaHandler.getMediaById(soc);
+                        MediaHandler.getMediaById(soc, pswd);
                     } catch (ServerException ex){
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 } else if ("ADD_MEDIA".equals(command)) {
                     try {
                         MediaHandler.addNewMedia(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                         try {
                             Utils.rollback();
                         } catch (Exception exep) {
@@ -207,7 +207,7 @@ public class ClientThread extends Thread {
                         MediaHandler.modifyMedia(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                         try {
                             Utils.rollback();
                         } catch (Exception exep) {
@@ -219,7 +219,7 @@ public class ClientThread extends Thread {
                         MediaHandler.deleteMedia(soc);
                         Utils.commit();
                     } catch (ServerException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                         try {
                             Utils.rollback();
                         } catch (Exception exep) {
@@ -234,13 +234,18 @@ public class ClientThread extends Thread {
                     System.err.println("Error: Ordre no reconeguda: " + command);
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
+                /*
                 if (e.getMessage().contains("Connection reset")) {
                     System.err.println("Error: La conexió ha sigut reiniciada pel client.");
                 } else {
                     e.printStackTrace();  // Manejo de otros errores de IO
                 }
-            } finally {
+                */
+                throw new ServerException(e);
+            } 
+            /*
+            finally {
                 try {
                     
                     soc.close();  // Cerrar la conexión con el cliente
@@ -249,6 +254,7 @@ public class ClientThread extends Thread {
                     System.err.println("Error al tancar la conexió amb el client: " + e.getMessage());
                 }
             }
+*/
         }
 
         

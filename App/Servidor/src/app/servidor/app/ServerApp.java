@@ -49,7 +49,7 @@ public class ServerApp {
                 qtThread++;
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

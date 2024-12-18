@@ -4,6 +4,7 @@
  */
 package app.client.demo.author;
 
+import app.crypto.CryptoUtils;
 import app.model.Author;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,6 +27,8 @@ public class DemoAddNewAuthor {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String command = "ADD_AUTHOR";
+        String pswd = CryptoUtils.getGenericPassword();
         System.out.println("Aquesta demo demostrarà la petició ADD_AUTHOR.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
@@ -34,22 +37,20 @@ public class DemoAddNewAuthor {
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("ADD_AUTHOR");
+        CryptoUtils.sendString(soc.getOutputStream(), command, pswd);
+        
         System.out.println("Petició enviada");
         Author a = new Author("Sergio", "Noya", "Cambeiro", "Un pobre currant...", "Espanya", 1997);
         
         System.out.println("L'autor a crear és : " + a.getFullName());
         
-        ObjectOutputStream objOut = new ObjectOutputStream(soc.getOutputStream());
-        objOut.writeObject(a);
-        objOut.flush();
-        System.out.println("Autor enviat");
+        CryptoUtils.sendObject(soc.getOutputStream(), a, pswd);
+        //System.out.println("Autor enviat");
         int id = -1;
         
-        ObjectInputStream objInt = new ObjectInputStream(soc.getInputStream());
         
-        id = objInt.readInt();
+        
+        id = CryptoUtils.readInt(soc.getInputStream(), pswd);
         System.out.println("La ID generada es " + id);
         
         

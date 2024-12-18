@@ -4,6 +4,7 @@
  */
 package app.servidor.handler;
 
+import app.crypto.CryptoUtils;
 import app.servidor.app.ClientThread;
 import app.model.Media;
 import app.servidor.app.ServerException;
@@ -23,48 +24,29 @@ public class MediaHandler {
     
     /**
      * envia per socket una llista amb tot el media de la db
-     * @param clientSocket
+     * @param soc
      */
-    public static void getAllMedia(Socket clientSocket) {
-            ObjectOutputStream objectOutput = null;
+    public static void getAllMedia(Socket soc, String pswd) {
             try {
                 ArrayList<Media> allMedia = DBMedia.getAllMedia();
-                
-                objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-                objectOutput.writeObject((Object)allMedia);
-                objectOutput.flush();
-                if (allMedia != null) {
-                    for (Media m : allMedia) {
-                        System.out.println(m.getTitle());
-                }
-                }
+                CryptoUtils.sendObject(soc.getOutputStream(), allMedia, pswd);
                 
             } catch (IOException ex) {
                 throw new ServerException(ex);
-            } finally {
-                Utils.closeObjectOutputStream(objectOutput);
             }
         }
     
     /**
      * rep per socket un id, i envia al client la media corresponent
-     * @param clientSocket
+     * @param soc
      */
-    public static void getMediaById(Socket clientSocket) {
-        ObjectInputStream objectInput = null;
-        ObjectOutputStream objectOutput = null;
+    public static void getMediaById(Socket soc, String pswd) {
         try {
-            objectInput = new ObjectInputStream(clientSocket.getInputStream());
-            int mediaId = objectInput.readInt();
+            int mediaId = CryptoUtils.readInt(soc.getInputStream(), pswd);
             Media media = DBMedia.getMediaById(mediaId);
-            objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-            objectOutput.writeObject((Object) media);
-            objectOutput.flush();
+            CryptoUtils.sendObject(soc.getOutputStream(), (Object)media, pswd);
         } catch (IOException ex) {
             throw new ServerException(ex);
-        } finally {
-            Utils.closeObjectInputStream(objectInput);
-            Utils.closeObjectOutputStream(objectOutput);
         }
     }
     

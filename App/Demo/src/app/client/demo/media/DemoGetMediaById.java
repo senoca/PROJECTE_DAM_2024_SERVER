@@ -4,6 +4,7 @@
  */
 package app.client.demo.media;
 
+import app.crypto.CryptoUtils;
 import app.model.Author;
 import app.model.Media;
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class DemoGetMediaById {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String pswd = CryptoUtils.getGenericPassword();
+        String command = "GET_MEDIA_BY_ID";
         System.out.println("Aquesta demo demostrarà la petició GET_MEDIA_BY_ID.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
@@ -36,8 +39,7 @@ public class DemoGetMediaById {
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("GET_MEDIA_BY_ID");
+        CryptoUtils.sendString(soc.getOutputStream(), command, pswd);
         System.out.println("Petició enviada");
         
         
@@ -45,14 +47,12 @@ public class DemoGetMediaById {
         
         System.out.println("Es demanarà el media amb ID " + id);
         
-        ObjectOutputStream objectOutput = new ObjectOutputStream(soc.getOutputStream());
         
-        objectOutput.writeInt(id);
-        objectOutput.flush();
+        CryptoUtils.sendInt(soc.getOutputStream(), id, pswd);
         System.out.println("ID enviada");
         Media media = null;
-        ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
-        media = (Media)objectInput.readObject();
+        
+        media = (Media)CryptoUtils.readObject(soc.getInputStream(), pswd);
         if (media == null) System.out.println("No s'ha trobat cap media amb ID " + id);
         else {
             System.out.print("ID: " + media.getWorkId() + " - Titol: " + media.getTitle() + " - Autors: ");

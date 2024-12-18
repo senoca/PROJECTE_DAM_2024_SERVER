@@ -28,26 +28,24 @@ public class AuthorHandler {
 
     /**
      * envia per socket una llista amb tots els autors de la db
-     * @param clientSocket
+     * @param soc
      */
-    public static void getAllAuthors(Socket clientSocket) {
-        ObjectOutputStream objectOutput = null;
+    public static void getAllAuthors(Socket soc, String pswd) {
+        
         System.out.println("Iniciant GetAllAuthors");
         try {
             System.out.println("generant llista");
             ArrayList<Author> authors = DBAuthor.getAllAuthors();
             System.out.println("llista generada");
-            objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-            System.out.println("canal output generat");
-            objectOutput.writeObject((Object) authors);
+            
+            CryptoUtils.sendObject(soc.getOutputStream(), (Object)authors, pswd);
+            
             System.out.println("llista enviada");
-            objectOutput.flush();
-            System.out.println("flush");
+            
+            
         } catch (IOException ex) {
             throw new ServerException(ex);
-        } finally {
-            Utils.closeObjectOutputStream(objectOutput);
-        }
+        } 
     }
     
     /**
@@ -88,7 +86,6 @@ public class AuthorHandler {
     public static void getAuthorById(Socket soc, String pswd) {
         System.out.println("Executant authorHandler.getAuthorById");
         try {
-            
             int authorId = CryptoUtils.readInt(soc.getInputStream(), pswd);
             System.out.println("Rebuda ID: " + authorId);
             Author author = DBAuthor.getAuthor(authorId);
@@ -96,7 +93,7 @@ public class AuthorHandler {
             else System.out.println("S'ha trobat: " + author.getFullName());
             System.out.println("Enviant author");
             
-            //CryptoUtils.sendObject(soc.getOutputStream(), author, pswd);
+            CryptoUtils.sendObject(soc.getOutputStream(), author, pswd);
             System.out.println("Autor enviat");
         } catch (Exception ex) {
             throw new ServerException(ex);
@@ -105,28 +102,23 @@ public class AuthorHandler {
     
     /**
      * rep per socket un client autor, i l'afegeix al servidor
-     * @param clientSocket
+     * @param soc
+     * @param pswd
      */
-    public static void addNewAuthor(Socket clientSocket) {
-        ObjectInputStream objectInput = null;
-        ObjectOutputStream objectOutput = null;
+    public static void addNewAuthor(Socket soc, String pswd) {
         System.out.println("Executant addNewAuthor");
         try {
             System.out.println("Rebent nou autor");
-            objectInput = new ObjectInputStream(clientSocket.getInputStream());
-            Author author = (Author) objectInput.readObject();
+            Object obj = CryptoUtils.readObject(soc.getInputStream(), pswd);
+            System.out.println("Rebut: " + obj.toString());
+            Author author = (Author) obj;
             System.out.println("Autor: " + author.getFullName());
             int authorId = DBAuthor.insertNewAuthor(author);
             System.out.println("Inserit! ID generada: " + authorId);
-            objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-            //Utils.sendStringToClient("AUTHOR_CREATED", clientSocket);
-            objectOutput.writeInt(authorId);
-            objectOutput.flush();
-            //Utils.sendStringToClient(authorId + "", clientSocket);
-        } catch (IOException | ClassNotFoundException ex) {
-            Utils.sendStringToClient("ADD_AUTHOR_FAIL: " + ex.getMessage(), clientSocket);
-            Utils.closeObjectInputStream(objectInput);
-            Utils.closeObjectOutputStream(objectOutput);
+            CryptoUtils.sendInt(soc.getOutputStream(), authorId, pswd);
+            
+        } catch (Exception ex) {
+            throw new ServerException(ex);
         }
     }
     

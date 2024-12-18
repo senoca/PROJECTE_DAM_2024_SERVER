@@ -4,6 +4,7 @@
  */
 package app.client.demo.user;
 
+import app.crypto.CryptoUtils;
 import app.model.Author;
 import app.model.User;
 import java.io.BufferedReader;
@@ -33,7 +34,8 @@ public class DemoGetAllUsers {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
-        
+        String pswd = CryptoUtils.getGenericPassword();
+        String txt = "GET_ALL_USERS";
         Scanner scanner = new Scanner(System.in);
         System.out.println("Prem enter per iniciar socket");
         scanner.nextLine();
@@ -41,15 +43,14 @@ public class DemoGetAllUsers {
         System.out.println("IP: " + ip.toString());
         Socket soc = new Socket(ip, port);
         
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+        
         
         System.out.println("\nFes enter per GET_ALL_USERS, i rebre les dades de tots els usuaris");
         scanner.nextLine();
-        writeToServer.println("GET_ALL_USERS");
+        CryptoUtils.sendString(soc.getOutputStream(), txt, pswd);
         System.out.println("Processant...");
-        ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
-        ArrayList<User> users = (ArrayList<User>) objectInput.readObject();
+        
+        ArrayList<User> users = (ArrayList<User>) CryptoUtils.readObject(soc.getInputStream(), pswd);
         for (User u : users)
         {
             System.out.println("ID " + u.getId() + " - " + u.getFullName() + " - " + u.getTypeAsString());
@@ -58,8 +59,6 @@ public class DemoGetAllUsers {
         
         System.out.println("Pren enter per tancar la demo");
         scanner.nextLine();
-        writeToServer.close();
-        readFromClient.close();
         soc.close();
     }
     

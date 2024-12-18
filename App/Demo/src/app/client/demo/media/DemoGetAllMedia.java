@@ -4,6 +4,7 @@
  */
 package app.client.demo.media;
 
+import app.crypto.CryptoUtils;
 import app.model.Author;
 import app.model.Media;
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class DemoGetAllMedia {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String pswd = CryptoUtils.getGenericPassword();
+        String command = "GET_ALL_MEDIA";
         System.out.println("Aquesta demo demostrarà la petició GET_ALL_MEDIA.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
@@ -37,8 +40,9 @@ public class DemoGetAllMedia {
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("GET_ALL_MEDIA");
+        
+        CryptoUtils.sendString(soc.getOutputStream(), command, pswd);
+        
         System.out.println("Petició enviada");
         
         
@@ -49,8 +53,8 @@ public class DemoGetAllMedia {
         
         
         ArrayList<Media> allMedia = null;
-        ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
-        allMedia = (ArrayList<Media>)objectInput.readObject();
+        
+        allMedia = (ArrayList<Media>)CryptoUtils.readObject(soc.getInputStream(), pswd);
         if (allMedia == null) System.out.println("No s'ha trobat cap media");
         else {
             for (Media m : allMedia)

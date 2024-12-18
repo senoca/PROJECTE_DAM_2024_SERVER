@@ -4,6 +4,7 @@
  */
 package app.client.demo.author;
 
+import app.crypto.CryptoUtils;
 import app.model.Author;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,6 +29,8 @@ public class DemoGetAllAuthors {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String command = "GET_ALL_AUTHORS";
+        String pswd = CryptoUtils.getGenericPassword();
         System.out.println("Aquesta demo demostrarà la petició GET_ALL_AUTHORS.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
@@ -35,12 +38,13 @@ public class DemoGetAllAuthors {
         Socket soc = new Socket(ip, port);
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("GET_ALL_AUTHORS");
+        scanner.nextLine();
+        CryptoUtils.sendString(soc.getOutputStream(), command, pswd);
+        
         System.out.println("Petició enviada");
-        ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
+        
         ArrayList<Author> authors = null;
-        authors = (ArrayList<Author>) objectInput.readObject();
+        authors = (ArrayList<Author>) CryptoUtils.readObject(soc.getInputStream(), pswd);
         System.out.println("\nAutors trobats: " + authors.size());
         for (Author a : authors)
         {

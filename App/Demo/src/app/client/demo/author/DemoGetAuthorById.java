@@ -43,7 +43,7 @@ public class DemoGetAuthorById {
         System.out.println("Petició enviada");
         
         
-        int id = 2; // ID a cercar
+        int id = 1; // ID a cercar
         
         System.out.println("Es demanarà l'autor amb ID " + id);
         
@@ -52,7 +52,7 @@ public class DemoGetAuthorById {
         CryptoUtils.sendInt(soc.getOutputStream(), id, pswd);
         System.out.println("ID enviada");
         Author author = null;
-        //author = (Author)CryptoUtils.readObject(soc.getInputStream(), pswd);
+        author = (Author)CryptoUtils.readObject(soc.getInputStream(), pswd);
         if (author == null) System.out.println("No s'ha trobat cap autor amb ID " + id);
         else System.out.println("S'ha trobat: " + author.getFullName());
         System.out.println("Tancant socket...");
