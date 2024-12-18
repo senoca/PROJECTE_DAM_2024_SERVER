@@ -70,13 +70,13 @@ public class ClientThread extends Thread {
                     
                 } else if ("LOGIN".equals(command)) {
                     try {
-                        //LogHandler.login(activeSessions, readFromClient, writeToClient);
+                        LogHandler.login(activeSessions, soc, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_PROFILE".equals(command)) {
                     try {
-                        //LogHandler.getProfile(activeSessions, readFromClient, writeToClient);
+                        LogHandler.getProfile(activeSessions, soc, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }

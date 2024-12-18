@@ -4,12 +4,14 @@
  */
 package app.servidor.handler;
 
+import app.crypto.CryptoUtils;
 import app.model.User;
 import app.servidor.app.ServerException;
 import app.servidor.entity.DBUser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -25,16 +27,16 @@ public class LogHandler {
      * @param readFromClient
      * @param writeToClient
      */
-    public static void logout(HashMap<String, User> activeSessions, BufferedReader readFromClient, PrintWriter writeToClient) {
+    public static void logout(HashMap<String, User> activeSessions, Socket soc, String pswd) {
         try {
             // Manejar el proceso de logout
-            String sessionId = readFromClient.readLine(); // El cliente debe enviar el identificador de sesión
+            String sessionId = CryptoUtils.readString(soc.getInputStream(), pswd); // El cliente debe enviar el identificador de sesión
             if (activeSessions.containsKey(sessionId)) {
                 activeSessions.remove(sessionId);
-                writeToClient.println("LOGOUT_OK");
+                CryptoUtils.sendString(soc.getOutputStream(), "LOGOUT_OK", pswd);
                 System.out.println("Logout exit\u00f2s per a la sessi\u00f3: " + sessionId);
             } else {
-                writeToClient.println("LOGOUT_FAIL: Sesi\u00f3 no trobada");
+                CryptoUtils.sendString(soc.getOutputStream(), "LOGOUT_FAIL: Sesi\u00f3 no trobada", pswd);
                 System.out.println("Intent de logout fallit. Sessi\u00f3 no trobada: " + sessionId);
             }
         } catch (IOException ex) {
@@ -48,13 +50,15 @@ public class LogHandler {
      * @param readFromClient
      * @param writeToClient
      */
-    public static void login(HashMap<String, User> activeSessions, BufferedReader readFromClient, PrintWriter writeToClient) {
-        try {
+    public static void login(HashMap<String, User> activeSessions, Socket soc, String pswd) {
             // Proceso de login
-            String username = readFromClient.readLine();
-            String password = readFromClient.readLine();
+        try {
+            String username = null;
+            String password = null;
+            username = CryptoUtils.readString(soc.getInputStream(), pswd);
+            password = CryptoUtils.readString(soc.getInputStream(), pswd);
             if (username == null || password == null) {
-                writeToClient.println("ERROR: Username o password no rebut.");
+                CryptoUtils.sendString(soc.getOutputStream(), "ERROR: Username o password no rebut.", pswd);
             } else {
                 System.out.println("Credencials rebudes: " + username + " / " + password);
                 // Verificar las credenciales usando DBUser
@@ -65,18 +69,18 @@ public class LogHandler {
                     // Almacenar la sesión en memoria
                     activeSessions.put(sessionId, user);
                     // Enviar el identificador de sesión y el tipo de usuario al cliente
-                    writeToClient.println("LOGIN_OK");
-                    writeToClient.println("SESSION_ID:" + sessionId);
-                    writeToClient.println("USER_TYPE:" + user.getType());
-                    writeToClient.println("USER_ID:" + user.getId());
+                    CryptoUtils.sendString(soc.getOutputStream(), "LOGIN_OK", pswd);
+                    CryptoUtils.sendString(soc.getOutputStream(), "SESSION_ID:" + sessionId, pswd);
+                    CryptoUtils.sendString(soc.getOutputStream(), "USER_TYPE:" + user.getType(), pswd);
+                    CryptoUtils.sendString(soc.getOutputStream(), "USER_ID:" + user.getId(), pswd);
                     System.out.println("Login exit\u00f2s per usuari: " + username + ", sessi\u00f3: " + sessionId);
                 } else {
                     // Devolver error si las credenciales no son válidas
-                    writeToClient.println("LOGIN_FAIL");
+                    CryptoUtils.sendString(soc.getOutputStream(), "LOGIN_FAIL", pswd);
                     System.out.println("Login fallit per usuari: " + username);
                 }
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new ServerException(ex);
         }
     }
@@ -87,22 +91,22 @@ public class LogHandler {
      * @param readFromClient
      * @param writeToClient
      */
-    public static void getProfile(HashMap<String, User> activeSessions, BufferedReader readFromClient, PrintWriter writeToClient) {
+    public static void getProfile(HashMap<String, User> activeSessions, Socket soc, String pswd) {
         try {
             // Comando para obtener el perfil del usuario
-            String sessionId = readFromClient.readLine(); // El cliente debe enviar el identificador de sesión
+            String sessionId = CryptoUtils.readString(soc.getInputStream(), pswd);
             if (activeSessions.containsKey(sessionId)) {
                 User user = activeSessions.get(sessionId);
                 // Enviar la información del perfil al cliente
-                writeToClient.println(user.getUsername());
-                writeToClient.println(user.getRealname());
-                writeToClient.println(user.getSurname1());
-                writeToClient.println(user.getSurname2() != null ? user.getSurname2() : "");
-                writeToClient.println(user.getType());
-                writeToClient.println(user.getPassword());
+                CryptoUtils.sendString(soc.getOutputStream(), user.getUsername(), pswd);
+                CryptoUtils.sendString(soc.getOutputStream(), user.getRealname(), pswd);
+                CryptoUtils.sendString(soc.getOutputStream(), user.getSurname1(), pswd);
+                CryptoUtils.sendString(soc.getOutputStream(), user.getSurname2() != null ? user.getSurname2() : "", pswd);
+                CryptoUtils.sendString(soc.getOutputStream(), user.getTypeAsString(), pswd);
+                CryptoUtils.sendString(soc.getOutputStream(), user.getPassword(), pswd);
                 System.out.println("Perfil enviat per la sessi\u00f3: " + sessionId);
             } else {
-                writeToClient.println("ERROR: Sessi\u00f3 no v\u00e1lida");
+                CryptoUtils.sendString(soc.getOutputStream(), "ERROR: Sessi\u00f3 no v\u00e1lida", pswd);
                 System.out.println("Error al obtenir perfil. Sessi\u00f3 no v\u00e1lida: " + sessionId);
             }
         } catch (IOException ex) {
