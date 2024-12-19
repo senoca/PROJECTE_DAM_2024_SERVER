@@ -58,4 +58,27 @@ public class Stream {
     public PrintWriter getWriter() {
         return writer;
     }
+    
+    public void close() {
+        try {
+            in.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        try {
+            reader.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        try {
+            writer.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            out.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

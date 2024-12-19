@@ -26,37 +26,37 @@ public class UserHandler {
      * @param clientSocket
      */
     public static void getAllUsers(Socket clientSocket, String pswd) {
-            List<User> allUsers = DBUser.getAllUsers();
-            
-            try {
-                CryptoUtils.sendObject(clientSocket.getOutputStream(), (Object)allUsers, pswd);
-                System.out.println("Llista enviada");
-            } catch (IOException ex) {
-                throw new ServerException(ex);
-            }
+//            List<User> allUsers = DBUser.getAllUsers();
+//            
+//            try {
+//                CryptoUtils.sendObject(clientSocket.getOutputStream(), (Object)allUsers, pswd);
+//                System.out.println("Llista enviada");
+//            } catch (IOException ex) {
+//                throw new ServerException(ex);
+//            }
         }
 
     /**
      * rep per socket un id i envia l'usuari corresponent
      * @param soc
      */
-    public static void getUserById(Socket soc, String pswd) {
+    public static void getUserById(Stream stream, String pswd) {
         System.out.println("Executant getUserById");
-//        try {
-//            System.out.println("inicialitzant objectinput");
-//            
-//            int userId = 0; // inicialitzo la id que es buscarà
-//            userId = CryptoUtils.readInt(soc.getInputStream(), pswd);
-//            System.out.println("objectInput llegit. Id : " + userId);
-//            User user = DBUser.getUserById(userId);
-//            System.out.println("Select executada");
-//            
-//            System.out.println("Trobat usuari");
-//            CryptoUtils.sendObject(soc.getOutputStream(), (Object)user, pswd);
-//            System.out.println("Usuari enviat");
-//        } catch (IOException ex) {
-//            throw new ServerException(ex);
-//        }
+        try {
+            System.out.println("inicialitzant objectinput");
+            
+            int userId = 0; // inicialitzo la id que es buscarà
+            userId = CryptoUtils.readInt(stream, pswd);
+            System.out.println("objectInput llegit. Id : " + userId);
+            User user = DBUser.getUserById(userId);
+            System.out.println("Select executada");
+            
+            System.out.println("Trobat usuari");
+            CryptoUtils.sendObject(stream, (Object)user, pswd);
+            System.out.println("Usuari enviat");
+        } catch (Exception ex) {
+            throw new ServerException(ex);
+        }
     }
     
     /**

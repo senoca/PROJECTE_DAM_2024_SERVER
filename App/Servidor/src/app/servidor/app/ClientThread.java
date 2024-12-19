@@ -69,7 +69,7 @@ public class ClientThread extends Thread {
                 */
                 if ("LOGOUT".equals(command)) {
                     try {
-                        //LogHandler.logout(activeSessions, readFromClient, writeToClient);
+                        LogHandler.logout(activeSessions, stream, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -100,7 +100,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("GET_USER_BY_ID".equals(command)) {
                     try {
-                        UserHandler.getUserById(soc, pswd);
+                        UserHandler.getUserById(stream, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -239,6 +239,7 @@ public class ClientThread extends Thread {
 //                    writeToClient.println("ERROR: Ordre no reconeguda");
                     System.err.println("Error: Ordre no reconeguda: " + command);
                 }
+                stream.close();
             } catch (Exception e) {
                 /*
                 if (e.getMessage().contains("Connection reset")) {

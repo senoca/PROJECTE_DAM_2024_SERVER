@@ -33,19 +33,19 @@ public class AuthorHandler {
     public static void getAllAuthors(Socket soc, String pswd) {
         
         System.out.println("Iniciant GetAllAuthors");
-        try {
-            System.out.println("generant llista");
-            ArrayList<Author> authors = DBAuthor.getAllAuthors();
-            System.out.println("llista generada");
-            
-            CryptoUtils.sendObject(soc.getOutputStream(), (Object)authors, pswd);
-            
-            System.out.println("llista enviada");
-            
-            
-        } catch (IOException ex) {
-            throw new ServerException(ex);
-        } 
+//        try {
+//            System.out.println("generant llista");
+//            ArrayList<Author> authors = DBAuthor.getAllAuthors();
+//            System.out.println("llista generada");
+//            
+//            CryptoUtils.sendObject(soc.getOutputStream(), (Object)authors, pswd);
+//            
+//            System.out.println("llista enviada");
+//            
+//            
+//        } catch (IOException ex) {
+//            throw new ServerException(ex);
+//        } 
     }
     
     /**
@@ -106,20 +106,20 @@ public class AuthorHandler {
      * @param pswd
      */
     public static void addNewAuthor(Socket soc, String pswd) {
-        System.out.println("Executant addNewAuthor");
-        try {
-            System.out.println("Rebent nou autor");
-            Object obj = CryptoUtils.readObject(soc.getInputStream(), pswd);
-            System.out.println("Rebut: " + obj.toString());
-            Author author = (Author) obj;
-            System.out.println("Autor: " + author.getFullName());
-            int authorId = DBAuthor.insertNewAuthor(author);
-            System.out.println("Inserit! ID generada: " + authorId);
-            //CryptoUtils.sendInt(soc.getOutputStream(), authorId, pswd);
-            
-        } catch (Exception ex) {
-            throw new ServerException(ex);
-        }
+//        System.out.println("Executant addNewAuthor");
+//        try {
+//            System.out.println("Rebent nou autor");
+//            Object obj = CryptoUtils.readObject(soc.getInputStream(), pswd);
+//            System.out.println("Rebut: " + obj.toString());
+//            Author author = (Author) obj;
+//            System.out.println("Autor: " + author.getFullName());
+//            int authorId = DBAuthor.insertNewAuthor(author);
+//            System.out.println("Inserit! ID generada: " + authorId);
+//            //CryptoUtils.sendInt(soc.getOutputStream(), authorId, pswd);
+//            
+//        } catch (Exception ex) {
+//            throw new ServerException(ex);
+//        }
     }
     
     /**
@@ -128,14 +128,14 @@ public class AuthorHandler {
      */
     public static void modifyAuthor(Socket clientSocket, String pswd) {
         
-            try {
-                
-                
-                Author updatedAuthor = (Author) CryptoUtils.readObject(clientSocket.getInputStream(), pswd);
-                DBAuthor.updateNewAuthor(updatedAuthor.getAuthorid(), updatedAuthor);
-            } catch (Exception ex) {
-                throw new ServerException(ex);
-            }
+//            try {
+//                
+//                
+//                Author updatedAuthor = (Author) CryptoUtils.readObject(clientSocket.getInputStream(), pswd);
+//                DBAuthor.updateNewAuthor(updatedAuthor.getAuthorid(), updatedAuthor);
+//            } catch (Exception ex) {
+//                throw new ServerException(ex);
+//            }
         }
 
     /**

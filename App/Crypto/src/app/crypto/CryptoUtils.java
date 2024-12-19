@@ -217,15 +217,15 @@ public class CryptoUtils {
         
     }
     
-    public static void sendObject(OutputStream out, Object obj, String pswd) {
+    public static void sendObject(Stream stream, Object obj, String pswd) {
          try {
             System.out.println("Sending object");
-            ObjectOutputStream stream = new ObjectOutputStream(out);
+            ObjectOutputStream out = stream.getOut();
             SecretKey key = generateKeyFromPassword(pswd);
             byte[] data = encryptObject(obj, key);
-            //stream.write(data);
-            stream.writeObject(obj);
-            stream.flush();
+            out.write(data);
+            out.flush();
+              
             System.out.println("Object sent");
         } catch (Exception ex) {
             throw new CryptoException(ex);
@@ -233,20 +233,16 @@ public class CryptoUtils {
         
     }
     
-    public static Object readObject(InputStream in, String pswd) {
+    public static Object readObject(Stream stream, String pswd) {
         System.out.println("Reading object");
         try {
-            ObjectInputStream stream = new ObjectInputStream(in);
+            ObjectInputStream in = stream.getIn();
             SecretKey key = generateKeyFromPassword(pswd);
-            System.out.println("readObject: ready to read data");
-            /*
-            byte[] data = stream.readAllBytes();
+            byte[] data = in.readAllBytes();
             System.out.println("readObject: data read");
             System.out.println(data);
             Object obj = decryptObject(data, key);
             System.out.println("Object read");
-*/
-            Object obj = stream.readObject();
             return obj;
         } catch (Exception ex) {
             throw new CryptoException(ex);

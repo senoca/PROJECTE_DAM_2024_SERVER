@@ -27,13 +27,13 @@ public class MediaHandler {
      * @param soc
      */
     public static void getAllMedia(Socket soc, String pswd) {
-            try {
-                ArrayList<Media> allMedia = DBMedia.getAllMedia();
-                CryptoUtils.sendObject(soc.getOutputStream(), allMedia, pswd);
-                
-            } catch (IOException ex) {
-                throw new ServerException(ex);
-            }
+//            try {
+//                ArrayList<Media> allMedia = DBMedia.getAllMedia();
+//                CryptoUtils.sendObject(soc.getOutputStream(), allMedia, pswd);
+//                
+//            } catch (IOException ex) {
+//                throw new ServerException(ex);
+//            }
         }
     
     /**

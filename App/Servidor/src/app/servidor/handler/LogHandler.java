@@ -28,21 +28,21 @@ public class LogHandler {
      * @param readFromClient
      * @param writeToClient
      */
-    public static void logout(HashMap<String, User> activeSessions, Socket soc, String pswd) {
-//        try {
-//            // Manejar el proceso de logout
-//            String sessionId = CryptoUtils.readString(soc.getInputStream(), pswd); // El cliente debe enviar el identificador de sesión
-//            if (activeSessions.containsKey(sessionId)) {
-//                activeSessions.remove(sessionId);
-//                CryptoUtils.sendString(soc.getOutputStream(), "LOGOUT_OK", pswd);
-//                System.out.println("Logout exit\u00f2s per a la sessi\u00f3: " + sessionId);
-//            } else {
-//                CryptoUtils.sendString(soc.getOutputStream(), "LOGOUT_FAIL: Sesi\u00f3 no trobada", pswd);
-//                System.out.println("Intent de logout fallit. Sessi\u00f3 no trobada: " + sessionId);
-//            }
-//        } catch (IOException ex) {
-//            throw new ServerException(ex);
-//        }
+    public static void logout(HashMap<String, User> activeSessions, Stream stream, String pswd) {
+        try {
+            // Manejar el proceso de logout
+            String sessionId = CryptoUtils.readString(stream, pswd); // El cliente debe enviar el identificador de sesión
+            if (activeSessions.containsKey(sessionId)) {
+                activeSessions.remove(sessionId);
+                CryptoUtils.sendString(stream, "LOGOUT_OK", pswd);
+                System.out.println("Logout exit\u00f2s per a la sessi\u00f3: " + sessionId);
+            } else {
+                CryptoUtils.sendString(stream, "LOGOUT_FAIL: Sesi\u00f3 no trobada", pswd);
+                System.out.println("Intent de logout fallit. Sessi\u00f3 no trobada: " + sessionId);
+            }
+        } catch (Exception ex) {
+            throw new ServerException(ex);
+        }
     }
 
     /**
