@@ -4,22 +4,37 @@
  */
 package app.model;
 
-import java.time.LocalDate;
+import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * Classe que emmagatzema els préstecs
  * @author Sergio
  */
-public class Loan {
+public class Loan implements Serializable {
     
     private static int maxLengthLoanInDays = 30;
     
     private Media loanedMedia;
     private User user;
     private boolean isReturned = false;
-    private LocalDate date_start_loan;
-    private LocalDate date_end_loan;
+    private Date dateStartLoan;
+    private Date dateEndLoan;
 
+    public Loan(Media loanedMedia, User user) {
+        this.loanedMedia = loanedMedia;
+        this.user = user;
+        setDateStartLoan(null);
+        setDateEndLoan(null);
+    }    
+
+    public Loan(Media loanedMedia, User user, Date dateStartLoan, Date dateEndLoan) {
+        this.loanedMedia = loanedMedia;
+        this.user = user;
+        this.dateStartLoan = dateStartLoan;
+        this.dateEndLoan = dateEndLoan;
+    }
+    
     public static int getMaxLengthLoanInDays() {
         return maxLengthLoanInDays;
     }
@@ -50,19 +65,28 @@ public class Loan {
         this.isReturned = isReturned;
     }
 
-    public LocalDate getDate_start_loan() {
-        return date_start_loan;
+    public Date getDateStartLoan() {
+        return dateStartLoan;
     }
 
-    public void setDate_start_loan(LocalDate date_start_loan) {
-        this.date_start_loan = date_start_loan;
+    public void setDateStartLoan(Date dateStartLoan) {
+        if (dateStartLoan == null) {
+            long currentTimeMillis = System.currentTimeMillis();
+            dateStartLoan = new Date(currentTimeMillis);;
+        }
+        this.dateStartLoan = dateStartLoan;
     }
 
-    public LocalDate getDate_end_loan() {
-        return date_end_loan;
+    public Date getDateEndLoan() {
+        return dateEndLoan;
     }
 
-    public void setDate_end_loan(LocalDate date_end_loan) {
-        this.date_end_loan = date_end_loan;
+    public void setDateEndLoan(Date dateEndLoan) {
+        if (dateEndLoan == null) {
+            long currentTimeMillis = System.currentTimeMillis();
+            long millisInADay = 24 * 60 * 60 * 1000L;
+            dateEndLoan = new Date(currentTimeMillis + (millisInADay * maxLengthLoanInDays));
+        }
+        this.dateEndLoan = dateEndLoan;
     }
 }

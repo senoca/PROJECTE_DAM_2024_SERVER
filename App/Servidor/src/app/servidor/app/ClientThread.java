@@ -8,6 +8,7 @@ import app.crypto.CryptoUtils;
 import app.crypto.Stream;
 import app.model.User;
 import app.servidor.handler.AuthorHandler;
+import app.servidor.handler.LoanHandler;
 import app.servidor.handler.LogHandler;
 import app.servidor.handler.MediaHandler;
 import app.servidor.handler.UserHandler;
@@ -228,6 +229,38 @@ public class ClientThread extends Thread {
                         }
                     }
                 }
+                
+                /*
+                PETICIONES DE LOANS
+                */
+                
+                else if ("ADD_LOAN".equals(command)){
+                    try {
+                        LoanHandler.addNewLoan(stream, pswd);
+                        Utils.commit();
+                    } catch (ServerException ex){
+                        ex.printStackTrace();
+                        Utils.rollback();
+                    }
+                } else if ("DELETE_LOAN".equals(command)){
+                    try {
+                        LoanHandler.deleteLoan(stream, pswd);
+                        Utils.commit();
+                    } catch (ServerException ex){
+                        ex.printStackTrace();
+                        Utils.rollback();
+                    }
+                } else if ("GET_ALL_LOANS".equals(command)){
+                    try {
+                        LoanHandler.getAllLoans(stream, pswd);
+                    } catch (ServerException ex){
+                        ex.printStackTrace();
+                        Utils.rollback();
+                    }
+                }
+                
+                
+                
                 else {
                     // Comando no reconocido
                     CryptoUtils.sendString(stream, pswd, "ERROR: Ordre no reconeguda");

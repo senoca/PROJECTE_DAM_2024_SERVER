@@ -69,7 +69,7 @@ CREATE TABLE LOANS (
     CONSTRAINT fk_workid FOREIGN KEY (workid) REFERENCES MEDIA(workid),
     CONSTRAINT fk_userid FOREIGN KEY (userid) REFERENCES users(userid)
 );
-GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;
+GRANT ALL PRIVILEGES ON LOANS TO library_app_admin;
 
 GRANT USAGE, SELECT ON SEQUENCE users_userid_seq TO library_app_admin;
 GRANT USAGE, SELECT ON SEQUENCE authors_authorid_seq TO library_app_admin;
