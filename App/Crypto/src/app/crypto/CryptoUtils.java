@@ -99,6 +99,13 @@ public class CryptoUtils {
         return decryptedObj;
     }
     
+    public static String encryptPassword(String pswd) {
+        SecretKey key = generateKeyFromPassword(getGenericPassword());
+        byte[] data = encryptString(pswd, key);
+        String encrypted = byteToB64(data);
+        return encrypted;
+    }
+    
     private static byte[] encryptString(String txt, SecretKey key) {
         System.out.println("encryptString");
         byte[] data = null;
@@ -204,10 +211,11 @@ public class CryptoUtils {
         
     }
     
-    public static int readInt(Stream stream, String pswd) {
+    public static Integer readInt(Stream stream, String pswd) {
         try {
             System.out.println("Reading Int");
             String nm = readString(stream, pswd);
+            if (nm == null) return null;
             int n = Integer.parseInt(nm);
             return n;  
         } catch (Exception ex) {
@@ -223,7 +231,7 @@ public class CryptoUtils {
             ObjectOutputStream out = stream.getOut();
             SecretKey key = generateKeyFromPassword(pswd);
             byte[] data = encryptObject(obj, key);
-            out.write(data);
+            out.writeObject((Object)data);
             out.flush();
               
             System.out.println("Object sent");
@@ -238,7 +246,7 @@ public class CryptoUtils {
         try {
             ObjectInputStream in = stream.getIn();
             SecretKey key = generateKeyFromPassword(pswd);
-            byte[] data = in.readAllBytes();
+            byte[] data = (byte[]) in.readObject();
             System.out.println("readObject: data read");
             System.out.println(data);
             Object obj = decryptObject(data, key);

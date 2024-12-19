@@ -96,27 +96,27 @@ public class LogHandler {
      * @param readFromClient
      * @param writeToClient
      */
-    public static void getProfile(HashMap<String, User> activeSessions, Socket soc, String pswd) {
-//        try {
-//            // Comando para obtener el perfil del usuario
-//            String sessionId = CryptoUtils.readString(soc.getInputStream(), pswd);
-//            if (activeSessions.containsKey(sessionId)) {
-//                User user = activeSessions.get(sessionId);
-//                // Enviar la información del perfil al cliente
-//                CryptoUtils.sendString(soc.getOutputStream(), user.getUsername(), pswd);
-//                CryptoUtils.sendString(soc.getOutputStream(), user.getRealname(), pswd);
-//                CryptoUtils.sendString(soc.getOutputStream(), user.getSurname1(), pswd);
-//                CryptoUtils.sendString(soc.getOutputStream(), user.getSurname2() != null ? user.getSurname2() : "", pswd);
-//                CryptoUtils.sendString(soc.getOutputStream(), user.getTypeAsString(), pswd);
-//                CryptoUtils.sendString(soc.getOutputStream(), user.getPassword(), pswd);
-//                System.out.println("Perfil enviat per la sessi\u00f3: " + sessionId);
-//            } else {
-//                CryptoUtils.sendString(soc.getOutputStream(), "ERROR: Sessi\u00f3 no v\u00e1lida", pswd);
-//                System.out.println("Error al obtenir perfil. Sessi\u00f3 no v\u00e1lida: " + sessionId);
-//            }
-//        } catch (IOException ex) {
-//            throw new ServerException(ex);
-//        }
+    public static void getProfile(HashMap<String, User> activeSessions, Stream stream, String pswd) {
+        try {
+            // Comando para obtener el perfil del usuario
+            String sessionId = CryptoUtils.readString(stream, pswd);
+            if (activeSessions.containsKey(sessionId)) {
+                User user = activeSessions.get(sessionId);
+                // Enviar la información del perfil al cliente
+                CryptoUtils.sendString(stream, user.getUsername(), pswd);
+                CryptoUtils.sendString(stream, user.getRealname(), pswd);
+                CryptoUtils.sendString(stream, user.getSurname1(), pswd);
+                CryptoUtils.sendString(stream, user.getSurname2() != null ? user.getSurname2() : "", pswd);
+                CryptoUtils.sendString(stream, user.getTypeAsString(), pswd);
+                CryptoUtils.sendString(stream, user.getPassword(), pswd);
+                System.out.println("Perfil enviat per la sessi\u00f3: " + sessionId);
+            } else {
+                CryptoUtils.sendString(stream, "ERROR: Sessi\u00f3 no v\u00e1lida", pswd);
+                System.out.println("Error al obtenir perfil. Sessi\u00f3 no v\u00e1lida: " + sessionId);
+            }
+        } catch (Exception ex) {
+            throw new ServerException(ex);
+        }
     }
     
 }

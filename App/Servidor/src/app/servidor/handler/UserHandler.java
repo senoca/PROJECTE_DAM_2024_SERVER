@@ -23,17 +23,17 @@ public class UserHandler {
     
     /**
      * envia per socket una llista amb tots els usuaris
-     * @param clientSocket
+     * @param stream
      */
-    public static void getAllUsers(Socket clientSocket, String pswd) {
-//            List<User> allUsers = DBUser.getAllUsers();
-//            
-//            try {
-//                CryptoUtils.sendObject(clientSocket.getOutputStream(), (Object)allUsers, pswd);
-//                System.out.println("Llista enviada");
-//            } catch (IOException ex) {
-//                throw new ServerException(ex);
-//            }
+    public static void getAllUsers(Stream stream, String pswd) {
+            List<User> allUsers = DBUser.getAllUsers();
+            
+            try {
+                CryptoUtils.sendObject(stream, (Object)allUsers, pswd);
+                System.out.println("Llista enviada");
+            } catch (Exception ex) {
+                throw new ServerException(ex);
+            }
         }
 
     /**
@@ -68,12 +68,12 @@ public class UserHandler {
             System.out.println("Inserint new user");
             
             try {
-//                User newUser = (User) CryptoUtils.readObject(soc.getInputStream(), pswd);
-//                System.out.println("Rebut " + newUser.getFullName());
-//                System.out.println("Inserint...");
-//                int userid = DBUser.insertUser(newUser);
-//                System.out.println("Inserit!");
-//                CryptoUtils.sendInt(stream, userid, pswd);
+                User newUser = (User) CryptoUtils.readObject(stream, pswd);
+                System.out.println("Rebut " + newUser.getFullName());
+                System.out.println("Inserint...");
+                int userid = DBUser.insertUser(newUser);
+                System.out.println("Inserit!");
+                CryptoUtils.sendInt(stream, userid, pswd);
             } catch (Exception ex) {
                 throw new ServerException(ex);
             } 
@@ -83,45 +83,33 @@ public class UserHandler {
      * rep per socket un usuari modificat i el sobreescriu a la bd
      * @param clientSocket
      */
-    public static void modifyUser(Socket clientSocket) {
-            ObjectInputStream objectInput = null;
+    public static void modifyUser(Stream stream, String pswd) {
             try {
-                objectInput = new ObjectInputStream(clientSocket.getInputStream());
-                int userId = objectInput.readInt();
-                System.out.println("User ID rebuda");
-                User updatedUser = (User) objectInput.readObject(); 
-                System.out.println("User " + updatedUser.getFullName() + " rebut");
-                DBUser.modifyUser(userId, updatedUser);
+                User u = (User) CryptoUtils.readObject(stream, pswd);
+                System.out.println("User " + u.getFullName() + " rebut");
+                DBUser.modifyUser(u.getId(), u);
                 System.out.println("modificació correcta");
-            } catch (IOException | ClassNotFoundException ex) {
+            } catch (Exception ex) {
                 throw new ServerException(ex);
-            } finally {
-                try {
-                    objectInput.close();
-                } catch (IOException ex) {}
-            }
+            } 
         }
     
     /**
      * rep per socket un id i esborra el usuari corresponent
      * @param clientSocket
      */
-    public static void deleteUserById(Socket clientSocket)
+    public static void deleteUserById(Stream stream, String pswd)
         {
-            ObjectInputStream objectInput = null;
+            
             try {
-                objectInput = new ObjectInputStream(clientSocket.getInputStream());
+                
                 int userId = -1; // inicialitzo la id que es buscarà
-                userId = objectInput.readInt(); // el client enviarà pel socket un int, l'id d'usuari
+                userId = CryptoUtils.readInt(stream, pswd); // el client enviarà pel socket un int, l'id d'usuari
                 System.out.println("Rebut ID " + userId);
                 DBUser.deleteUserById(userId);
                 System.out.println("Eliminat!");
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 throw new ServerException(ex);
-            } finally {
-                try {
-                    objectInput.close();
-                } catch (IOException ex) {}
             }
         }
 }

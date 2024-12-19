@@ -1,4 +1,8 @@
-DROP TABLE if exists USERS;
+DROP TABLE if exists USERS cascade;
+DROP TABLE if exists AUTHORS cascade;
+DROP TABLE if exists MEDIA cascade;
+DROP TABLE if exists MEDIA_CREATORS cascade;
+DROP TABLE if exists LOANS cascade;
 
 CREATE TABLE USERS (
     userid          serial primary key,
@@ -17,7 +21,7 @@ CREATE TABLE USERS (
 );
 GRANT ALL PRIVILEGES ON USERS TO library_app_admin;
 
-DROP TABLE if exists AUTHORS;
+
 CREATE TABLE AUTHORS (
     authorid        serial primary key,
     authorname      varchar(255) not null,
@@ -29,7 +33,7 @@ CREATE TABLE AUTHORS (
 );
 GRANT ALL PRIVILEGES ON AUTHORS TO library_app_admin;
 
-DROP TABLE if exists MEDIA;
+
 CREATE TABLE MEDIA (
     workid                  serial primary key,
     title                   varchar(255) not null unique,
@@ -45,7 +49,7 @@ CREATE TABLE MEDIA (
 );
 GRANT ALL PRIVILEGES ON MEDIA TO library_app_admin;
 
-DROP TABLE if exists MEDIA_CREATORS;
+
 CREATE TABLE MEDIA_CREATORS (
     workid                  integer,
     creatorid              integer,
@@ -55,7 +59,7 @@ CREATE TABLE MEDIA_CREATORS (
 );
 GRANT ALL PRIVILEGES ON MEDIA_CREATORS TO library_app_admin;
 
-DROP TABLE if exists LOANS;
+
 CREATE TABLE LOANS (
     workid              integer primary key,
     userid              integer not null,

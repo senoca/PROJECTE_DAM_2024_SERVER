@@ -4,6 +4,8 @@
  */
 package app.client.demo.user;
 
+import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.User;
 import app.model.UserType;
 import java.io.BufferedReader;
@@ -26,8 +28,7 @@ public class DemoDeleteUser {
     /**
      * @param args the command line arguments
      * 
-     * NO FUNCIONA, NO ENTENC PER QUE???
-     * El programa fa tot correcte, el servidor rep la ID correctament, s'executa la comanda sql pero no s'elimina l'usuari i no entenc per que.
+     
      */
     private int port = 12345;
     private InetAddress ip = null;
@@ -35,39 +36,29 @@ public class DemoDeleteUser {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
-        
+        String cmd = "DELETE_USER";
+        String pswd = CryptoUtils.getGenericPassword();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Prem enter per iniciar socket");
         scanner.nextLine();
         System.out.println("Port: " + port);
         System.out.println("IP: " + ip.toString());
         Socket soc = new Socket(ip, port);
-        
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+        Stream stream = new Stream(soc);
         
         System.out.println("\nElimina un nou usuari prenent ENTER");
         scanner.nextLine();
         
+        CryptoUtils.sendString(stream, cmd, pswd);
         
-        writeToServer.println("DELETE_USER");
-        
-        ObjectOutputStream objectOutput = new ObjectOutputStream(soc.getOutputStream());
-        
-        
-        int userId = 11;
+        int userId = 4;
         
         
         
-        objectOutput.writeInt(userId);
-        
-        objectOutput.flush();
+        CryptoUtils.sendInt(stream, userId, pswd);
         
         System.out.println("Pren enter per tancar la demo");
         scanner.nextLine();
-        writeToServer.close();
-        readFromClient.close();
-        objectOutput.close();
         soc.close();
     }
     

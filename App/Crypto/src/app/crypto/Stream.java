@@ -80,5 +80,6 @@ public class Stream {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        System.out.println("Stream closed");
     }
 }

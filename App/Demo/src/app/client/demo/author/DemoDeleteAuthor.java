@@ -4,6 +4,8 @@
  */
 package app.client.demo.author;
 
+import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.Author;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -26,25 +28,26 @@ public class DemoDeleteAuthor {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String pswd = CryptoUtils.getGenericPassword();
         System.out.println("Aquesta demo demostrarà la petició DELETE_AUTHOR.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
         System.out.println("IP: " + ip.getHostAddress());
         Socket soc = new Socket(ip, port);
+        Stream stream = new Stream(soc);
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("DELETE_AUTHOR");
+        CryptoUtils.sendString(stream, "DELETE_AUTHOR", pswd);
         System.out.println("Petició enviada");
         
-        int authorId = 35;
+        int authorId = 5;
         
         System.out.println("L'autor a crear eliminar té ID : " + authorId);
         
-        ObjectOutputStream objOut = new ObjectOutputStream(soc.getOutputStream());
-        objOut.writeInt(authorId);
-        objOut.flush();
+        
+        
+        CryptoUtils.sendInt(stream, authorId, pswd);
         System.out.println("Autor enviat");
         
         

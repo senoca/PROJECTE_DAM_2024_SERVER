@@ -1,5 +1,6 @@
 package app.model;
 
+import app.crypto.CryptoUtils;
 import java.io.Serializable;
 
 /**
@@ -278,7 +279,8 @@ public class User implements Serializable {
         // Contrasenya no pot ser null o buit
         if (password == null) throw new ModelException("ERROR: password no pot ser nul");
         else if (password.isBlank()) throw new ModelException("ERROR: password no pot estar buit");
-        this.password = password;
+        String encryptedPswd = CryptoUtils.encryptPassword(password); // convertida en Base64 usant encriptació AES
+        this.password = encryptedPswd;
     }
 
     /**

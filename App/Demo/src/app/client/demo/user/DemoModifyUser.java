@@ -4,6 +4,8 @@
  */
 package app.client.demo.user;
 
+import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.User;
 import app.model.UserType;
 import java.io.BufferedReader;
@@ -39,26 +41,23 @@ public class DemoModifyUser {
         System.out.println("Port: " + port);
         System.out.println("IP: " + ip.toString());
         Socket soc = new Socket(ip, port);
+        Stream stream = new Stream(soc);
         
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
         
         System.out.println("\nModifica un nou usuari prenent ENTER");
         scanner.nextLine();
-        User u = new User("bookenjoyer", "1234", "Pepe", "Gutierrez", UserType.ADMIN);
-        
-        writeToServer.println("MODIFY_USER");
-        
-        ObjectOutputStream objectOutput = new ObjectOutputStream(soc.getOutputStream());
         
         
-        int userId = 11;
+        String pswd = CryptoUtils.getGenericPassword();
+        CryptoUtils.sendString(stream, "MODIFY_USER", pswd);
         
         
+        int userId = 1;
+        User u = new User(userId, "senoca", "4321", "Sergio", "Noya", "Cambeiro", UserType.ADMIN);
         
-        objectOutput.writeInt(userId);
-        objectOutput.writeObject(u);
-        objectOutput.flush();
+        CryptoUtils.sendObject(stream, (Object)u, pswd);
+        
+        
         System.out.println("User " + u.getFullName() + " enviat");
         
         
@@ -67,9 +66,7 @@ public class DemoModifyUser {
         
         System.out.println("Pren enter per tancar la demo");
         scanner.nextLine();
-        writeToServer.close();
-        readFromClient.close();
-        objectOutput.close();
+        stream.close();
         soc.close();
     }
     

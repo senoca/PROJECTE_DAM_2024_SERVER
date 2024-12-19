@@ -43,7 +43,7 @@ public class DemoGetUserById {
         CryptoUtils.sendString(stream, txt, pswd);
         System.out.println("Petició enviada");
         
-        int userId = 1;
+        int userId = 2;
         
         System.out.println("L'usuari a cercar té ID : " + userId);
         CryptoUtils.sendInt(stream, userId, pswd);

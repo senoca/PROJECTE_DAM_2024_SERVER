@@ -54,14 +54,9 @@ public class ClientThread extends Thread {
                 System.out.println("Iniciat thread client");
                 // Establecer timeout en el socket (30 segundos)
                 soc.setSoTimeout(5000);
-
-                // He canviant les variables in i out a readFromClient i writeToClient respectivament, per més claretat de lectura
-                //BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-                //PrintWriter writeToClient = new PrintWriter(soc.getOutputStream(), true);
                 
                 // Leer el comando del cliente
                 String pswd = CryptoUtils.getGenericPassword();
-                //String command = readFromClient.readLine();
                 String command = CryptoUtils.readString(stream, pswd);
                 System.out.println("Executant petició: " + command);
                 /*
@@ -82,7 +77,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("GET_PROFILE".equals(command)) {
                     try {
-                        //LogHandler.getProfile(activeSessions, soc, pswd);
+                        LogHandler.getProfile(activeSessions, stream, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -94,7 +89,7 @@ public class ClientThread extends Thread {
                 
                 else if ("GET_ALL_USERS".equals(command)) {
                     try {
-                        UserHandler.getAllUsers(soc, pswd);
+                        UserHandler.getAllUsers(stream, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -106,7 +101,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("ADD_USER".equals(command)) {
                     try {
-                        //UserHandler.addNewUser(soc, pswd);
+                        UserHandler.addNewUser(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -114,7 +109,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("DELETE_USER".equals(command)) {
                     try {
-                        UserHandler.deleteUserById(soc);
+                        UserHandler.deleteUserById(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -122,7 +117,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_USER".equals(command)) {
                     try {
-                        UserHandler.modifyUser(soc);
+                        UserHandler.modifyUser(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -134,19 +129,19 @@ public class ClientThread extends Thread {
                 */    
                 else if ("GET_ALL_AUTHORS".equals(command)){
                     try {
-                        AuthorHandler.getAllAuthors(soc, pswd);
+                        AuthorHandler.getAllAuthors(stream, pswd);
                     } catch (ServerException ex){
                         ex.printStackTrace();
                     }
                 } else if ("GET_AUTHOR_BY_ID".equals(command)) {
                     try {
-                        AuthorHandler.getAuthorById(soc, pswd);
+                        AuthorHandler.getAuthorById(stream, pswd);
                     } catch (ServerException ex){
                         ex.printStackTrace();
                     }
                 } else if ("ADD_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.addNewAuthor(soc, pswd);
+                        AuthorHandler.addNewAuthor(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();
@@ -158,7 +153,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.modifyAuthor(soc, pswd);
+                        AuthorHandler.modifyAuthor(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();
@@ -170,7 +165,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("DELETE_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.deleteAuthor(soc);
+                        AuthorHandler.deleteAuthor(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();
