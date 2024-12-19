@@ -17,16 +17,18 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Aquesta classe conté les funcions relacionades amb login i logout
+ * Aquesta classe conté les funcions relacionades amb login i logout.
+ * Proporciona la funcionalitat per autenticar usuaris i gestionar les seves sessions.
  * @author Sergio
  */
 public class LogHandler {
 
     /**
-     *
-     * @param activeSessions
-     * @param readFromClient
-     * @param writeToClient
+     * Processa la petició de logout d'un usuari.
+     * El servidor elimina la sessió activa si existeix.
+     * @param activeSessions mapa que conté les sessions actives amb els usuaris.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void logout(HashMap<String, User> activeSessions, Stream stream, String pswd) {
         try {
@@ -46,10 +48,11 @@ public class LogHandler {
     }
 
     /**
-     *
-     * @param activeSessions
-     * @param readFromClient
-     * @param writeToClient
+     * Processa la petició de login d'un usuari.
+     * Verifica les credencials de l'usuari i, si són correctes, crea una nova sessió.
+     * @param activeSessions mapa que conté les sessions actives amb els usuaris.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void login(HashMap<String, User> activeSessions, Stream stream, String pswd) {
             // Proceso de login
@@ -91,10 +94,11 @@ public class LogHandler {
     }
 
     /**
-     *
-     * @param activeSessions
-     * @param readFromClient
-     * @param writeToClient
+     * Obté el perfil de l'usuari basat en la sessió activa.
+     * Envia la informació de l'usuari al client si la sessió és vàlida.
+     * @param activeSessions mapa que conté les sessions actives amb els usuaris.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getProfile(HashMap<String, User> activeSessions, Stream stream, String pswd) {
         try {

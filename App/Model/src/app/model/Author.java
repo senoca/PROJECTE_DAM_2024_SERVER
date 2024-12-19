@@ -24,12 +24,13 @@ public class Author implements Serializable {
     //private List<Media> works;
 
     /**
-     * Constructor de la classe Autor
-     * @param authorid 
-     * @param authorname nom de l'autor
-     * @param biography breu biografia de l'autor
-     * @param nationality nacionalitat de l'autor
-     * @param yearbirth any de naixement de l'autor
+     * Constructor de la clase {@code Author} que crea un nuevo autor con la información proporcionada.
+     * 
+     * @param authorid el identificador del autor.
+     * @param authorname el nombre del autor.
+     * @param biography la biografía del autor.
+     * @param nationality la nacionalidad del autor.
+     * @param yearbirth el año de nacimiento del autor.
      */
     public Author(int authorid, String authorname, String biography, String nationality, int yearbirth) {
         setAuthorid(authorid);
@@ -61,8 +62,9 @@ public class Author implements Serializable {
     }
 
     /**
-     * Retorna un hashcode a partir de authorid
-     * @return
+     * Calcula el código hash del autor basado en el identificador {@code authorid}.
+     * 
+     * @return el código hash generado para el objeto {@code Author}.
      */
     @Override
     public int hashCode() {
@@ -72,9 +74,11 @@ public class Author implements Serializable {
     }
 
     /**
-     *
-     * @param obj l'autor a comparar
-     * @return true o false segons this.authorId == obj.authorId
+     * Compara este objeto {@code Author} con otro para determinar si son iguales.
+     * La igualdad se basa en el identificador {@code authorid}.
+     * 
+     * @param obj el objeto con el que se va a comparar este autor.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
      */
     @Override
     public boolean equals(Object obj) {
@@ -262,8 +266,11 @@ public class Author implements Serializable {
   */  
 
     /**
-     * retorna el nom complet com a string
-     * @return authorname + surname1 + surname2 com a un sol string
+     * Obtiene el nombre completo del autor, que consiste en el nombre seguido de los apellidos 
+     * (si están disponibles).
+     * 
+     * @return el nombre completo del autor, que incluye {@code authorname} y los apellidos
+     *         {@code surname1} y {@code surname2} si no son {@code null}.
      */
     public String getFullName() {
         String fullName = authorname;

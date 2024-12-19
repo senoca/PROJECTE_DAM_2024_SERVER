@@ -30,27 +30,46 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- *
- * @author Sergio
- */
+    /**
+     * Clase de utilidad para la encriptación y desencriptación de datos utilizando el algoritmo AES.
+     * Esta clase proporciona métodos para generar claves a partir de contraseñas, encriptar y desencriptar objetos, cadenas e 
+     * enteros, y convertir datos a formato Base64.
+     */
 public class CryptoUtils {
     private static int keyLength = 32;
     private static String pswd = "1234";
     
+    /**
+     * Genera una clave secreta AES a partir de una contraseña.
+     * 
+     * @param password la contraseña utilizada para generar la clave.
+     * @return la clave secreta generada.
+     */
     private static SecretKey generateKeyFromPassword(String password) {
         byte[] bytes = Arrays.copyOf(password.getBytes(), keyLength);
         SecretKey key = new SecretKeySpec(bytes, "AES");
         return key;
     }
     
-    
+    /**
+     * Genera una clave secreta AES a partir de una contraseña encriptada.
+     * 
+     * @param pswdAsBytes la contraseña encriptada representada como un arreglo de bytes.
+     * @return la clave secreta generada.
+     */    
     private static SecretKey generateKeyFromEncryptedPassword(byte[] pswdAsBytes ) {
         byte[] bytes = Arrays.copyOf(pswdAsBytes, keyLength);
         SecretKey key = new SecretKeySpec(bytes, "AES");
         return key;
     }
     
+    /**
+     * Encripta un objeto utilizando el algoritmo AES.
+     * 
+     * @param obj el objeto a encriptar.
+     * @param key la clave secreta utilizada para la encriptación.
+     * @return el objeto encriptado como un arreglo de bytes.
+     */
     private static byte[] encryptObject(Object obj, SecretKey key) {
         System.out.println("Encrypting object");
         byte[] encryptedObj = null;
@@ -65,6 +84,14 @@ public class CryptoUtils {
         return encryptedObj;
     }
     
+    
+    /**
+     * Serializa un objeto en un array de bytes.
+     * 
+     * @param obj el objeto a serializar.
+     * @return el objeto serializado como un array de bytes.
+     * @throws IOException si ocurre un error durante la serialización.
+     */
     private static byte[] serializeObject(Object obj) throws IOException {
         System.out.println("Serializing Object");
         if (obj == null) return null;
@@ -75,6 +102,15 @@ public class CryptoUtils {
         return byteStream.toByteArray();
     }
     
+    
+    /**
+     * Deserializa un array de bytes a un objeto.
+     * 
+     * @param byteArray el arreglo de bytes que representa el objeto.
+     * @return el objeto deserializado.
+     * @throws IOException si ocurre un error durante la deserialización.
+     * @throws ClassNotFoundException si no se encuentra la clase del objeto.
+     */
     private static Object deserializeObject(byte[] byteArray) throws IOException, ClassNotFoundException {
         System.out.println("Deserializing Object");
         if (byteArray == null) return null;
@@ -83,7 +119,13 @@ public class CryptoUtils {
         }
     }
     
-        
+    /**
+     * Desencripta un objeto utilizando el algoritmo AES.
+     * 
+     * @param encryptedObj el objeto encriptado representado como un array de bytes.
+     * @param key la clave secreta utilizada para la desencriptación.
+     * @return el objeto desencriptado.
+     */    
     private static Object decryptObject(byte[] encryptedObj, SecretKey key) {
         System.out.println("Decrypting Object");
         Object decryptedObj = null;
@@ -99,6 +141,12 @@ public class CryptoUtils {
         return decryptedObj;
     }
     
+    /**
+     * Encripta una contraseña utilizando el algoritmo AES.
+     * 
+     * @param pswd la contraseña a encriptar.
+     * @return la contraseña encriptada en formato Base64.
+     */
     public static String encryptPassword(String pswd) {
         SecretKey key = generateKeyFromPassword(getGenericPassword());
         byte[] data = encryptString(pswd, key);
@@ -106,6 +154,13 @@ public class CryptoUtils {
         return encrypted;
     }
     
+    /**
+     * Encripta una cadena de texto utilizando el algoritmo AES.
+     * 
+     * @param txt la cadena de texto a encriptar.
+     * @param key la clave secreta utilizada para la encriptación.
+     * @return la cadena de texto encriptada como un arreglo de bytes.
+     */
     private static byte[] encryptString(String txt, SecretKey key) {
         System.out.println("encryptString");
         byte[] data = null;
@@ -120,6 +175,13 @@ public class CryptoUtils {
         return data;
     }
     
+    /**
+     * Desencripta una cadena de texto utilizando el algoritmo AES.
+     * 
+     * @param data el arreglo de bytes que representa la cadena encriptada.
+     * @param key la clave secreta utilizada para la desencriptación.
+     * @return la cadena de texto desencriptada.
+     */
     private static String decryptString(byte[] data, SecretKey key) {
         System.out.println("Decrypting String");
         String txt = null;
@@ -135,6 +197,12 @@ public class CryptoUtils {
         return txt;
     }
     
+    /**
+     * Convierte un arreglo de bytes a una cadena en formato Base64.
+     * 
+     * @param data el arreglo de bytes a convertir.
+     * @return la cadena en formato Base64.
+     */
     private static String byteToB64(byte[] data) {
         try {
             System.out.println("byteToB64. Data: " + data.toString());
@@ -147,6 +215,12 @@ public class CryptoUtils {
         
     }
     
+    /**
+     * Convierte una cadena en formato Base64 a un arreglo de bytes.
+     * 
+     * @param base64 la cadena en formato Base64 a convertir.
+     * @return el arreglo de bytes resultante.
+     */
     private static byte[] b64ToByte(String base64) {
         try {
             System.out.println("b64ToByte. Data: " + base64);
@@ -156,10 +230,15 @@ public class CryptoUtils {
         } catch (Exception ex) {
             throw new CryptoException(ex);
         }
-        
-        
     }
     
+    /**
+     * Envía una cadena de texto encriptada a través de la conexión de red.
+     * 
+     * @param stream el objeto {@code Stream} utilizado para enviar la cadena.
+     * @param txt la cadena de texto a enviar.
+     * @param pswd la contraseña utilizada para encriptar la cadena.
+     */
     public static void sendString(Stream stream, String txt, String pswd) {
         try {
             
@@ -176,6 +255,13 @@ public class CryptoUtils {
         }
     }
     
+    /**
+     * Lee una cadena de texto encriptada desde la conexión de red y la desencripta.
+     * 
+     * @param stream el objeto {@code Stream} utilizado para leer la cadena.
+     * @param pswd la contraseña utilizada para desencriptar la cadena.
+     * @return la cadena de texto desencriptada.
+     */
     public static String readString(Stream stream, String pswd)
     {
         System.out.println("readString");
@@ -200,6 +286,14 @@ public class CryptoUtils {
         return txt;
     }
     
+    /**
+     * Envía un número entero a través de un flujo encriptado.
+     * 
+     * @param stream el flujo de salida donde se enviará el entero.
+     * @param n el número entero a enviar.
+     * @param pswd la contraseña para generar la clave de cifrado.
+     * @throws CryptoException si ocurre un error al enviar el número.
+     */
     public static void sendInt(Stream stream, int n, String pswd) {
         try {
             System.out.println("Sending Int");
@@ -211,6 +305,14 @@ public class CryptoUtils {
         
     }
     
+    /**
+     * Lee un número entero desde un flujo encriptado.
+     * 
+     * @param stream el flujo de entrada desde el cual se leerá el entero.
+     * @param pswd la contraseña para generar la clave de cifrado.
+     * @return el número entero leído, o {@code null} si no se encuentra ningún valor.
+     * @throws CryptoException si ocurre un error al leer el número.
+     */
     public static Integer readInt(Stream stream, String pswd) {
         try {
             System.out.println("Reading Int");
@@ -221,10 +323,17 @@ public class CryptoUtils {
         } catch (Exception ex) {
             throw new CryptoException(ex);
         }
-        
-        
     }
     
+    
+    /**
+     * Envía un objeto a través de un flujo encriptado.
+     * 
+     * @param stream el flujo de salida donde se enviará el objeto.
+     * @param obj el objeto a enviar.
+     * @param pswd la contraseña para generar la clave de cifrado.
+     * @throws CryptoException si ocurre un error al enviar el objeto.
+     */
     public static void sendObject(Stream stream, Object obj, String pswd) {
          try {
             System.out.println("Sending object");
@@ -238,9 +347,16 @@ public class CryptoUtils {
         } catch (Exception ex) {
             throw new CryptoException(ex);
         }
-        
     }
     
+    /**
+     * Lee un objeto desde un flujo encriptado.
+     * 
+     * @param stream el flujo de entrada desde el cual se leerá el objeto.
+     * @param pswd la contraseña para generar la clave de cifrado.
+     * @return el objeto leído.
+     * @throws CryptoException si ocurre un error al leer el objeto.
+     */
     public static Object readObject(Stream stream, String pswd) {
         System.out.println("Reading object");
         try {
@@ -259,6 +375,11 @@ public class CryptoUtils {
         
     }
     
+    /**
+     * Obtiene la contraseña genérica usada para la encriptación.
+     * 
+     * @return la contraseña genérica.
+     */
     public static String getGenericPassword() {
         return pswd;
     }

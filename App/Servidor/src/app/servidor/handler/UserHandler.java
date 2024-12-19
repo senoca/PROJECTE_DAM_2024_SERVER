@@ -16,14 +16,16 @@ import java.net.Socket;
 import java.util.List;
 
 /**
- * Aquesta classe conté les funcions per resoldre les peticions client-servidor relacionades amb usuaris
+ * Aquesta classe conté les funcions per resoldre les peticions client-servidor relacionades amb usuaris.
+ * Inclou operacions per obtenir, afegir, modificar i esborrar usuaris de la base de dades.
  * @author Sergio
  */
 public class UserHandler {
     
     /**
-     * envia per socket una llista amb tots els usuaris
-     * @param stream
+     * Envia per socket una llista amb tots els usuaris de la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getAllUsers(Stream stream, String pswd) {
             List<User> allUsers = DBUser.getAllUsers();
@@ -37,8 +39,9 @@ public class UserHandler {
         }
 
     /**
-     * rep per socket un id i envia l'usuari corresponent
-     * @param soc
+     * Rep per socket un id d'usuari i envia l'usuari corresponent.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getUserById(Stream stream, String pswd) {
         System.out.println("Executant getUserById");
@@ -60,8 +63,9 @@ public class UserHandler {
     }
     
     /**
-     * rep un nou usuari i l'inserta a la base de dades, retorna per socket la nova id
-     * @param soc
+     * Rep un nou usuari per socket, l'inserta a la base de dades i retorna la nova id generada.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void addNewUser(Stream stream, String pswd)
         {
@@ -80,8 +84,9 @@ public class UserHandler {
         }
 
     /**
-     * rep per socket un usuari modificat i el sobreescriu a la bd
-     * @param clientSocket
+     * Rep un usuari modificat per socket i actualitza les seves dades a la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void modifyUser(Stream stream, String pswd) {
             try {
@@ -95,8 +100,9 @@ public class UserHandler {
         }
     
     /**
-     * rep per socket un id i esborra el usuari corresponent
-     * @param clientSocket
+     * Rep per socket un id d'usuari i esborra l'usuari corresponent de la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void deleteUserById(Stream stream, String pswd)
         {

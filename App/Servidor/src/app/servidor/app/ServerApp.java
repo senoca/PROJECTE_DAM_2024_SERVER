@@ -18,7 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Aquesta classe és el main del servidor. Espera a que un client es connecti, i quan ho fa, genera un ClientThread
+ * Aquesta classe és el punt d'entrada del servidor.
+ * S'encarrega d'esperar les connexions dels clients, i quan un client es connecta,
+ * es crea un nou ClientThread per gestionar la seva comunicació.
  * @author Sergio
  */
 public class ServerApp {
@@ -27,9 +29,9 @@ public class ServerApp {
     private static HashMap<String, User> activeSessions = new HashMap<>();
 
     /**
-     *
-     * @param args 
-     * Main del servidor
+     * Funció principal del servidor.
+     * El servidor escolta les connexions entrants i genera un nou thread per cada client.
+     * @param args Paràmetres de línia de comandes (no utilitzats en aquest cas).
      */
     public static void main(String[] args) {
         int port = 12345;  // Puerto en el que escuchará el servidor

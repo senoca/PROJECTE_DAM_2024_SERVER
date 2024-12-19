@@ -23,7 +23,9 @@ import java.net.Socket;
 import java.util.HashMap;
 
 /**
- * La classe Client extén threads, i serveix per rebre les peticions d'un client
+ * La classe ClientThread extén la classe Thread i serveix per rebre les peticions d'un client
+ * i processar-les de manera concurrent.
+ * Cada instància d'aquesta classe gestiona la comunicació amb un client connectat al servidor.
  * @author Sergio
  */
 public class ClientThread extends Thread {
@@ -34,9 +36,11 @@ public class ClientThread extends Thread {
         private final Stream stream;
 
     /**
-     * Constructor de classe Client
-     * @param socket socket per connectar amb el client
-     * @param activeSessions hashmap dels usuaris connectats al servidor
+     * Constructor de la classe ClientThread.
+     * Inicialitza el socket de comunicació amb el client i el hashmap amb les sessions actives.
+     * @param serverSocket El servidor que accepta connexions.
+     * @param socket El socket per comunicar-se amb el client.
+     * @param activeSessions El mapa de sessions d'usuaris actius.
      */
     public ClientThread(ServerSocket serverSocket, Socket socket, HashMap<String, User> activeSessions) {
             this.serverSocket = serverSocket;
@@ -47,7 +51,8 @@ public class ClientThread extends Thread {
         }
         
     /**
-     * Bucle principal on es reben i responen les peticions dels clients
+     * Mètode principal que s'executa quan s'inicia el thread.
+     * Processa les peticions dels clients en un bucle de recepció i resposta.
      */
     @Override
         public void run() {

@@ -14,7 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * DBUser guarda les funcions per administrar les consultes, altes, baixes o modificacions referents a la taula Users
+ * DBUser guarda les funcions per administrar les consultes, altes, baixes o modificacions referents a la taula Users.
+ * Aquesta classe interactua amb la base de dades per gestionar les operacions relacionades amb els usuaris.
  * @author Sergio
  */
 public class DBUser {
@@ -26,10 +27,10 @@ public class DBUser {
     
 
     /**
-     * Busca si existex un usuari amb alies i pswd introduits, retorna true si existeix i false si no
-     * @param alias
-     * @param pswd
-     * @return
+     * Comprova si existeix un usuari amb el nom d'usuari i la contrasenya proporcionats.
+     * @param alias nom d'usuari de l'usuari.
+     * @param pswd contrasenya de l'usuari.
+     * @return true si l'usuari existeix, false si no.
      */
 
     public static boolean UserExists(String alias, String pswd) {
@@ -38,10 +39,10 @@ public class DBUser {
     }
 
     /**
-     * Busca un únic usuari amb alies i pswd introduits, retorna user
-     * @param username
-     * @param pswd
-     * @return
+     * Cerca un usuari a la base de dades amb el nom d'usuari i la contrasenya proporcionats.
+     * @param username nom d'usuari.
+     * @param pswd contrasenya de l'usuari.
+     * @return un objecte User amb les dades de l'usuari si es troba, null si no es troba.
      */
 
     public static User getUserFromCredentials(String username, String pswd) {
@@ -70,9 +71,9 @@ public class DBUser {
     }
 
     /**
-     * retorna un user cercant la id
-     * @param idToSearch
-     * @return
+     * Retorna un usuari cercant la seva ID a la base de dades.
+     * @param idToSearch ID de l'usuari a cercar.
+     * @return un objecte User amb les dades de l'usuari si es troba, null si no es troba.
      */
     public static User getUserById(int idToSearch) {
         String query = "SELECT userid, username, userpswd, realname, surname1, surname2, usertype "
@@ -99,8 +100,8 @@ public class DBUser {
     }
     
     /**
-     * retorna tots els usuaris de la bd
-     * @return
+     * Retorna tots els usuaris registrats a la base de dades.
+     * @return una llista amb tots els usuaris.
      */
     public static List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
@@ -124,9 +125,11 @@ public class DBUser {
         return users;
     }
     
-    /*
-    Crea un objecte usuari a partir d'un ResultSet
-    */
+    /**
+     * Crea un objecte User a partir d'un ResultSet de la consulta SQL.
+     * @param rs el ResultSet amb les dades de l'usuari.
+     * @return un objecte User amb les dades de l'usuari.
+     */
     private static User buildUserObject(ResultSet rs) {
         User u;
         try {
@@ -148,11 +151,10 @@ public class DBUser {
     
 
     /**
-     * Método para obtener el tipo de usuario (USER o ADMIN) por username.
-     * @param username
-     * @return
+     * Obté el tipus d'usuari (USER o ADMIN) a partir del nom d'usuari.
+     * @param username nom d'usuari.
+     * @return el tipus d'usuari com a cadena (USER o ADMIN).
      */
-
     public static String getUserType(String username) {
         String query = "SELECT usertype FROM users WHERE username = ?";
         String userType = null;
@@ -175,10 +177,10 @@ public class DBUser {
     }
 
     /**
-     * insereix nou user a la db
-     * @param user
+     * Insereix un nou usuari a la base de dades.
+     * @param user l'objecte User que es vol inserir.
+     * @return l'ID de l'usuari inserit.
      */
-
     public static int insertUser(User user) 
     {
         int userid = -1;
@@ -223,8 +225,8 @@ public class DBUser {
     }
     
     /**
-     * esborra user de la db segons id
-     * @param userid
+     * Esborra un usuari de la base de dades segons la seva ID.
+     * @param userid ID de l'usuari a esborrar.
      */
     public static void deleteUserById(int userid) {
         try {
@@ -241,9 +243,9 @@ public class DBUser {
     }
     
     /**
-     * sobreescriu les dades de user identificat per id amb les de newUser
-     * @param userId
-     * @param newUser
+     * Modifica les dades d'un usuari identificat per la seva ID amb les noves dades.
+     * @param userId ID de l'usuari a modificar.
+     * @param newUser objecte User amb les noves dades.
      */
     public static void modifyUser(int userId, User newUser) {
         try {

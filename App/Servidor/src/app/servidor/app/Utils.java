@@ -14,14 +14,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
- * Classe amb eines per administrar la connexió servidor-client
+ * Classe amb eines per administrar la connexió servidor-client i la gestió de la base de dades.
+ * Aquesta classe proporciona mètodes per obrir, tancar i gestionar transaccions JDBC, així com per
+ * gestionar connexions i enviament de dades a través de sockets.
  * @author Sergio
  */
 public class Utils {
     /*
     ATRIBUTS DE LA CONNEXIÓ
-    - url és la direcció sencera de la database, p.ex: "jdbc:postgresql://localhost/ProductDB"
-    - user el nom d'usuari de postgres
+    - url és la direcció sencera de la base de dades, p.ex: "jdbc:postgresql://localhost/ProductDB"
+    - user és el nom d'usuari de PostgreSQL
     - password és la contrasenya de l'usuari
     */
     
@@ -31,18 +33,11 @@ public class Utils {
     
     // Connexió JDBC amb postgres
     private static Connection conJDBC = null;
-    
-    
-    /*
-    setProperties(String url, String user, String password) inicialitza
-    els atributs de la connexió
-    */
-    
 
     /**
-     * openConnection() s'executa quan es vol obrir la connexió JDBC
-     * la funció primer comproba si si ja hi havia una connexió, i si no n'hi ha
-     * la crea usant l'url, user i password de la classe Utils
+     * Obrir la connexió JDBC amb la configuració per defecte.
+     * Aquesta funció comprova si ja existeix una connexió oberta, i si no n'hi ha, crea una nova.
+     * Si la connexió es crea correctament, es desactiva el commit automàtic.
      */
 
     public static void openConnection() 
@@ -58,12 +53,12 @@ public class Utils {
     }
 
     /**
-     * openConnection() s'executa quan es vol obrir la connexió JDBC
-     * la funció primer comproba si si ja hi havia una connexió, i si no n'hi ha
-     * la crea usant l'url, user i password de la classe Utils
-     * @param url direcció per connectar a Postgres
-     * @param user usuari postgres
-     * @param password contrasenya de l'usuari
+     * Obrir la connexió JDBC amb configuració personalitzada.
+     * Aquesta funció comprova si ja existeix una connexió oberta, i si no n'hi ha, crea una nova
+     * amb l'URL, usuari i contrasenya proporcionats.
+     * @param url Direcció per connectar-se a la base de dades PostgreSQL.
+     * @param user Usuari per a la connexió a PostgreSQL.
+     * @param password Contrasenya de l'usuari per a la connexió a PostgreSQL.
      */
     public static void openConnection(String url, String user, String password) 
     {
@@ -82,9 +77,9 @@ public class Utils {
     
     /*
     closeConnection s'executa quan es vol tancar la connexió JDBC
-    la funció comproba primer que la connexió no estigui ja tancada
-    si no està tancada, primer intenta fer rollback dels canvis no desats
-    finalment, intenta tancar la connexió
+    La funció comprova primer que la connexió no estigui ja tancada.
+    Si no està tancada, primer intenta fer rollback dels canvis no desats
+    finalment, intenta tancar la connexió.
     */
     public static void closeConnection() {
         if (conJDBC != null) {
@@ -143,9 +138,10 @@ public class Utils {
     }
     
     /**
-     * Converteix un string en una query parametritzada, l'executa i retorna un resultset
-     * @param statement string amb query sql
-     * @return resultset amb el resultat
+     * Executa una consulta SELECT i retorna un ResultSet amb el resultat.
+     * Aquesta funció utilitza la connexió JDBC per executar una consulta SQL de tipus SELECT.
+     * @param statement String amb la consulta SQL.
+     * @return ResultSet amb el resultat de la consulta.
      */
     public static ResultSet getSelect(String statement)
     {
@@ -161,8 +157,8 @@ public class Utils {
     }
 
     /**
-     * tanca un objectInputStream
-     * @param in objectInputStream a tancar
+     * Tanca un ObjectInputStream.
+     * @param in ObjectInputStream que es vol tancar.
      */
     public static void closeObjectInputStream(ObjectInputStream in) {
         if (in != null) {

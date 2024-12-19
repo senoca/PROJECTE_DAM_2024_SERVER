@@ -22,14 +22,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * AuthorHandler resol totes les peticions client-usuari relacionades amb autors
+ * AuthorHandler resol totes les peticions client-usuari relacionades amb autors.
+ * Aquesta classe gestiona la comunicació amb el client per obtenir, afegir, modificar i esborrar autors.
+ * Utilitza connexions segures per encriptar les dades enviades i rebudes.
  * @author Sergio
  */
 public class AuthorHandler {
 
     /**
-     * envia per socket una llista amb tots els autors de la db
-     * @param soc
+     * Obté tots els autors des de la base de dades i els envia al client per mitjà d'un socket.
+     * La llista d'autors es xifra abans d'enviar-la.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getAllAuthors(Stream stream, String pswd) {
         
@@ -51,10 +55,11 @@ public class AuthorHandler {
     
        
     /**
-     * VERSIÓ CRYPTO 
-     * rep per socket un id, i retorna per socket l'autor corresponent
-     * @param soc
-     * @param pswd contrasenya per encriptació
+     * VERSIÓ CRYPTO
+     * Rep per socket un ID d'autor, recupera l'autor corresponent de la base de dades
+     * i l'envia al client de forma xifrada.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getAuthorById(Stream stream, String pswd) {
         System.out.println("Executant authorHandler.getAuthorById");
@@ -74,9 +79,9 @@ public class AuthorHandler {
     }
     
     /**
-     * rep per socket un client autor, i l'afegeix al servidor
-     * @param soc
-     * @param pswd
+     * Rep per socket un objecte autor, el guarda a la base de dades i retorna l'ID de l'autor creat.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void addNewAuthor(Stream stream, String pswd) {
         System.out.println("Executant addNewAuthor");
@@ -96,8 +101,9 @@ public class AuthorHandler {
     }
     
     /**
-     * rep per socket un client amb dades modificades, i el sobreescriu
-     * @param clientSocket
+     * Rep per socket un objecte autor amb dades modificades, i actualitza les dades a la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void modifyAuthor(Stream stream, String pswd) {
         
@@ -110,8 +116,9 @@ public class AuthorHandler {
         }
 
     /**
-     * rep per socket un id, i esborra de la bd el autor corresponent
-     * @param clientSocket
+     * Rep per socket un ID d'autor i l'esborra de la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void deleteAuthor(Stream stream, String pswd) {
         

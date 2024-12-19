@@ -17,15 +17,18 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
 /**
- * Aquesta classe té les funcions per resoldre les peticions client-servidor relacionades amb media
+ * Aquesta classe té les funcions per resoldre les peticions client-servidor relacionades amb media.
+ * Inclou operacions per obtenir, afegir, modificar i esborrar registres de media a la base de dades.
  * @author Sergio
  */
 public class MediaHandler {
     
     /**
-     * envia per socket una llista amb tot el media de la db
-     * @param soc
+     * Envia per socket una llista amb tot el media de la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getAllMedia(Stream stream, String pswd) {
             try {
@@ -38,8 +41,9 @@ public class MediaHandler {
         }
     
     /**
-     * rep per socket un id, i envia al client la media corresponent
-     * @param soc
+     * Rep per socket un id i envia al client la media corresponent.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void getMediaById(Stream stream, String pswd) {
         try {
@@ -52,8 +56,9 @@ public class MediaHandler {
     }
     
     /**
-     * rep un media modificat i el sobreescriu a la bd amb les dades noves
-     * @param clientSocket
+     * Rep un objecte de media modificat i el sobreescriu a la base de dades amb les dades noves.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void modifyMedia(Stream stream, String pswd) {
         try {
@@ -66,8 +71,9 @@ public class MediaHandler {
     }
     
     /**
-     * rep un id i esborra el media corresponent
-     * @param clientSocket
+     * Rep un id per socket i esborra el media corresponent de la base de dades.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void deleteMedia(Stream stream, String pswd) {
             try {
@@ -79,8 +85,9 @@ public class MediaHandler {
         }
     
     /**
-     * rep per socket un media nou, l'afegeix a la bd i retorna al client l'id generat
-     * @param clientSocket
+     * Rep per socket un nou objecte de media, l'afegeix a la base de dades i retorna al client l'id generat.
+     * @param stream el flux de comunicació entre el servidor i el client.
+     * @param pswd la contrasenya utilitzada per encriptar la comunicació.
      */
     public static void addNewMedia(Stream stream, String pswd) {
             try {

@@ -18,7 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * DBMEDIA guarda les funcions per administrar les consultes, altes, baixes o modificacions referents a la taula MEDIA
+ * DBMedia conté les funcions per gestionar les operacions relacionades amb la taula "MEDIA" de la base de dades.
+ * Aquestes operacions inclouen la inserció, actualització, eliminació i recuperació de dades relacionades amb obres i autors.
  * @author Sergio
  */
 public class DBMedia {
@@ -34,9 +35,13 @@ public class DBMedia {
     private static PreparedStatement deleteMediaByIdStatement = null;
     
     /**
-     * insereix un nou media a la bd
-     * @param media
-     * @return
+     * Insereix un nou mitjà a la base de dades.
+     * 
+     * Aquesta funció afegeix un registre a la taula "MEDIA" amb la informació del mitjà proporcionat
+     * i retorna l'ID generat per a aquest mitjà.
+     * @param media l'objecte Media que conté les dades a inserir
+     * @return l'ID del mitjà inserit
+     * @throws ServerException si es produeix un error a l'inserir el mitjà
      */
     public static int insertNewMedia(Media media) {
         String statement = "INSERT INTO MEDIA (title, yearpublication, mediatype, media_description) values (?, ?, ?, ?)  returning workid";
@@ -66,9 +71,12 @@ public class DBMedia {
     }
     
     /**
-     * insereix les relacions autor-obra corresponents a la taula media_creators
-     * @param mediaId
-     * @param authorId
+     * Insereix una relació autor-obra a la taula "media_creators".
+     * 
+     * Aquesta funció afegeix un registre a la taula "media_creators" per associar un autor amb un mitjà.
+     * @param mediaId l'ID del mitjà
+     * @param authorId l'ID de l'autor
+     * @throws ServerException si es produeix un error a l'inserir la relació
      */
     public static void insertAuthorOfMedia(int mediaId, int authorId) {
         String statement = "insert into media_creators (workid, creatorid) values (?, ?)";
@@ -85,8 +93,12 @@ public class DBMedia {
     }
     
     /**
-     * esborra un media identificat per id de la bd
-     * @param mediaId
+     * Esborra un mitjà de la base de dades identificat per l'ID proporcionat.
+     * 
+     * Aquesta funció elimina un registre de la taula "MEDIA" basat en l'ID del mitjà.
+     * També elimina les relacions autor-obra associades amb aquest mitjà.
+     * @param mediaId l'ID del mitjà a eliminar
+     * @throws ServerException si es produeix un error a l'eliminar el mitjà
      */
     public static void deleteMedia(int mediaId) {
         deleteAllAuthorsFromMedia(mediaId);
@@ -104,8 +116,11 @@ public class DBMedia {
     }
     
     /**
-     * esborra totes les relacions author-media de media_creators pel media identificat per id mediaID
-     * @param mediaId
+     * Esborra totes les relacions autor-obra d'un mitjà identificat per l'ID del mitjà.
+     * 
+     * Aquesta funció elimina tots els registres associats al mitjà a la taula "media_creators".
+     * @param mediaId l'ID del mitjà
+     * @throws ServerException si es produeix un error a l'eliminar les relacions
      */
     public static void deleteAllAuthorsFromMedia(int mediaId) {
         System.out.println("executant deleteAllAuthorsFromMedia");
@@ -123,9 +138,12 @@ public class DBMedia {
     }
     
     /**
-     * sobreescriu les dades d'un media identificat per id amb les dades de updatedMedia
-     * @param mediaId
-     * @param updatedMedia
+     * Actualitza un mitjà existent a la base de dades amb les dades proporcionades.
+     * 
+     * Aquesta funció actualitza el registre del mitjà identificat per l'ID del mitjà amb les noves dades del mitjà actualitzat.
+     * @param mediaId l'ID del mitjà a actualitzar
+     * @param updatedMedia l'objecte Media amb les noves dades
+     * @throws ServerException si es produeix un error a l'actualitzar el mitjà
      */
     public static void updateMedia(int mediaId, Media updatedMedia) {
         String statement = ""
@@ -157,6 +175,13 @@ public class DBMedia {
         }
     }
     
+    /**
+     * Actualitza els autors associats amb un mitjà després d'una actualització.
+     * 
+     * Aquesta funció elimina les relacions autor-obra existents i les torna a inserir segons els autors actualitzats.
+     * @param mediaId l'ID del mitjà a actualitzar
+     * @param updatedMedia l'objecte Media amb els nous autors
+     */
     private static void updateAuthorsFromMedia(int mediaId, Media updatedMedia) {
         System.out.println("Executant updateAuthorsFromMedia");
         deleteAllAuthorsFromMedia(mediaId);
@@ -169,9 +194,12 @@ public class DBMedia {
     }
     
     /**
-     * Crea un objecte Media a partir d'un resultset
-     * @param rs
-     * @return
+     * Crea un objecte Media a partir d'un ResultSet.
+     * 
+     * Aquesta funció crea un objecte Media utilitzant les dades obtingudes d'un ResultSet de la base de dades.
+     * @param rs el ResultSet amb les dades del mitjà
+     * @return un objecte Media creat
+     * @throws ServerException si es produeix un error a l'crear l'objecte Media
      */
     public static Media buildMediaObject(ResultSet rs) {
         Media media = null;
@@ -190,10 +218,13 @@ public class DBMedia {
     }
     
     /**
-     * Crea un objecte Media a partir d'un resultset i afegeix una llista d'autors com a creadors d'aquest media
-     * @param rs
-     * @param authors
-     * @return
+     * Crea un objecte Media a partir d'un ResultSet i afegeix els autors com a creadors d'aquest mitjà.
+     * 
+     * Aquesta funció crea un objecte Media i afegeix una llista d'autors associats a aquest mitjà.
+     * @param rs el ResultSet amb les dades del mitjà
+     * @param authors la llista d'autors associats amb el mitjà
+     * @return un objecte Media creat amb els autors associats
+     * @throws ServerException si es produeix un error a l'crear l'objecte Media amb els autors
      */
     public static Media buildMediaObject(ResultSet rs, List<Author> authors) {
         Media media = null;
@@ -213,9 +244,12 @@ public class DBMedia {
     }
     
     /**
-     * retorna un media identificat per id
-     * @param mediaId
-     * @return
+     * Retorna un mitjà identificat per l'ID proporcionat.
+     * 
+     * Aquesta funció recupera un mitjà de la base de dades utilitzant el seu ID i retorna l'objecte Media corresponent.
+     * @param mediaId l'ID del mitjà a recuperar
+     * @return l'objecte Media associat amb l'ID proporcionat
+     * @throws ServerException si es produeix un error al recuperar el mitjà
      */
     public static Media getMediaById(int mediaId) {
         Media media = null;

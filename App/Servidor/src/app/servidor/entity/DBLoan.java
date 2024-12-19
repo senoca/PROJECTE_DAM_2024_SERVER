@@ -18,13 +18,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Aquesta classe conté funcions per gestionar les operacions relacionades amb la taula "LOANS" de la base de dades.
+ * Permet inserir nous préstecs, eliminar préstecs i obtenir tots els préstecs.
  * @author Sergio
  */
 public class DBLoan {
     private static PreparedStatement insertLoanStatement = null;
     private static PreparedStatement deleteLoanStatement = null;
     
+    /**
+     * Insereix un nou préstec a la base de dades.
+     * 
+     * Aquesta funció afegeix un registre a la taula "LOANS" amb la informació del préstec proporcionat.
+     * @param loan l'objecte Loan que conté les dades a inserir a la base de dades
+     * @throws ServerException si es produeix un error a l'inserir el préstec
+     */
     public static void insertNewLoan(Loan loan) {
         try {
             if (loan == null)
@@ -47,6 +55,13 @@ public class DBLoan {
         }
     }
     
+    /**
+     * Elimina un préstec de la base de dades.
+     * 
+     * Aquesta funció esborra un préstec de la taula "LOANS" utilitzant l'identificador del treball (workId).
+     * @param workId l'identificador del treball prestat que es vol eliminar
+     * @throws ServerException si es produeix un error a l'eliminar el préstec
+     */
     public static void deleteLoan(int workId) {
         try {
             System.out.println("Eliminant data");
@@ -61,6 +76,14 @@ public class DBLoan {
         }
     }
     
+    /**
+     * Recupera tots els préstecs de la base de dades.
+     * 
+     * Aquesta funció executa una consulta SQL per obtenir tots els préstecs existents a la taula "LOANS" i els retorna
+     * en una llista d'objectes Loan.
+     * @return una llista d'objectes Loan amb la informació de tots els préstecs
+     * @throws ServerException si es produeix un error en recuperar els préstecs
+     */
     public static ArrayList<Loan> getAllLoans() {
         ArrayList<Loan> loans = new ArrayList<Loan>();
         try {
