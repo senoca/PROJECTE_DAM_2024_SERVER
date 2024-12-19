@@ -5,6 +5,8 @@
 package app.client.demo.media;
 
 import app.client.demo.author.*;
+import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.Author;
 import app.model.Media;
 import app.model.MediaType;
@@ -30,27 +32,27 @@ public class DemoDeleteMedia {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String pswd = CryptoUtils.getGenericPassword();
+        String cmd = "DELETE_MEDIA";
         System.out.println("Aquesta demo demostrarà la petició DELETE_MEDIA.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
         System.out.println("IP: " + ip.getHostAddress());
         Socket soc = new Socket(ip, port);
+        Stream stream = new Stream(soc);
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("DELETE_MEDIA");
+        CryptoUtils.sendString(stream, cmd, pswd);
         System.out.println("Petició enviada");
         
         
-        int id = 8;
+        int id = 5;
         
         
         System.out.println("El llibre a eliminar a crear és ID : " + id);
         
-        ObjectOutputStream objOut = new ObjectOutputStream(soc.getOutputStream());
-        objOut.writeInt(id);
-        objOut.flush();
+        CryptoUtils.sendInt(stream, id, pswd);
         System.out.println("Llibre enviat");
         
         

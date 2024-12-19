@@ -5,6 +5,8 @@
 package app.client.demo.media;
 
 import app.client.demo.author.*;
+import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.Author;
 import app.model.Media;
 import app.model.MediaType;
@@ -30,31 +32,27 @@ public class DemoAddNewMedia {
         int port = 12345;
         InetAddress ip = InetAddress.getLocalHost();
         Scanner scanner = new Scanner(System.in);
+        String cmd = "ADD_MEDIA";
+        String pswd = CryptoUtils.getGenericPassword();
         System.out.println("Aquesta demo demostrarà la petició ADD_MEDIA.");
         System.out.println("\nIniciant socket...");
         System.out.println("Port: " + port);
         System.out.println("IP: " + ip.getHostAddress());
         Socket soc = new Socket(ip, port);
+        Stream stream = new Stream(soc);
         System.out.println("Socket Iniciat!");
         System.out.println("Pren enter per llançar la petició");
         scanner.nextLine();
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        writeToServer.println("ADD_MEDIA");
+        CryptoUtils.sendString(stream, cmd, pswd);
         System.out.println("Petició enviada");
         Media m = new Media("El Hòbbit", 1939, MediaType.BOOK, "Fantasía");
         Author a = new Author(3, "John Ronald", "Tolkien", null, "Escritor de Fantasía", "Reino Unido", 1892);
         m.addAuthor(a);
         System.out.println("El llibre a crear a crear és : " + m.getTitle());
         
-        ObjectOutputStream objOut = new ObjectOutputStream(soc.getOutputStream());
-        objOut.writeObject(m);
-        objOut.flush();
+        CryptoUtils.sendObject(stream, m, pswd);
         System.out.println("Llibre enviat");
-        int id = -1;
-        
-        ObjectInputStream objInt = new ObjectInputStream(soc.getInputStream());
-        
-        id = objInt.readInt();
+        Integer id = CryptoUtils.readInt(stream, pswd);
         System.out.println("La ID generada es " + id);
         
         

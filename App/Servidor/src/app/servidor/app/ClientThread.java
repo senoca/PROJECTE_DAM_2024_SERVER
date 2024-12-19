@@ -181,19 +181,19 @@ public class ClientThread extends Thread {
                 */
                 else if ("GET_ALL_MEDIA".equals(command)){
                     try {
-                        MediaHandler.getAllMedia(soc, pswd);
+                        MediaHandler.getAllMedia(stream, pswd);
                     } catch (ServerException ex){
                         ex.printStackTrace();
                     }
                 } else if ("GET_MEDIA_BY_ID".equals(command)) {
                     try {
-                        MediaHandler.getMediaById(soc, pswd);
+                        MediaHandler.getMediaById(stream, pswd);
                     } catch (ServerException ex){
                         ex.printStackTrace();
                     }
                 } else if ("ADD_MEDIA".equals(command)) {
                     try {
-                        MediaHandler.addNewMedia(soc);
+                        MediaHandler.addNewMedia(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();
@@ -205,7 +205,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_MEDIA".equals(command)) {
                     try {
-                        MediaHandler.modifyMedia(soc);
+                        MediaHandler.modifyMedia(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();
@@ -217,7 +217,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("DELETE_MEDIA".equals(command)) {
                     try {
-                        MediaHandler.deleteMedia(soc);
+                        MediaHandler.deleteMedia(stream, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();

@@ -50,7 +50,7 @@ public class DemoLog {
         System.out.println("Petició enviada");
         
         CryptoUtils.sendString(stream, "senoca", pswd);
-        CryptoUtils.sendString(stream, "1234", pswd);
+        CryptoUtils.sendString(stream, CryptoUtils.encryptPassword("4321"), pswd);
         System.out.println("1 - " + CryptoUtils.readString(stream, pswd));
         System.out.println("2 - " + CryptoUtils.readString(stream, pswd));
         System.out.println("3 - " + CryptoUtils.readString(stream, pswd));
