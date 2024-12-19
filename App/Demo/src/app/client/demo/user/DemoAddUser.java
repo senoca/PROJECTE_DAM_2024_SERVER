@@ -4,6 +4,7 @@
  */
 package app.client.demo.user;
 
+import app.crypto.CryptoUtils;
 import app.model.User;
 import app.model.UserType;
 import java.io.BufferedReader;
@@ -30,43 +31,34 @@ public class DemoAddUser {
     private InetAddress ip = null;
     
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-        int port = 12345;
-        InetAddress ip = InetAddress.getLocalHost();
-        
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Prem enter per iniciar socket");
-        scanner.nextLine();
-        System.out.println("Port: " + port);
-        System.out.println("IP: " + ip.toString());
-        Socket soc = new Socket(ip, port);
-        
-        PrintWriter writeToServer = new PrintWriter(soc.getOutputStream(), true);
-        BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-        
-        System.out.println("\nInsereix un nou usuari prenent ENTER");
-        scanner.nextLine();
-        User u = new User("bookenjoyer", "1234", "Pepe", "Gutierrez", UserType.USER);
-        
-        writeToServer.println("ADD_USER");
-        
-        
-        ObjectOutputStream objectOutput = new ObjectOutputStream(soc.getOutputStream());
-        objectOutput.writeObject(u);
-        objectOutput.flush();
-        System.out.println("User " + u.getFullName() + " enviat");
-        ObjectInputStream objectInput = new ObjectInputStream(soc.getInputStream());
-        int userid = objectInput.readInt();
-        System.out.println("ID generada: " + userid);
-        
-        
-        
-        System.out.println("Pren enter per tancar la demo");
-        scanner.nextLine();
-        writeToServer.close();
-        readFromClient.close();
-        objectInput.close();
-        objectOutput.close();
-        soc.close();
+//        int port = 12345;
+//        InetAddress ip = InetAddress.getLocalHost();
+//        String pswd = CryptoUtils.getGenericPassword();
+//        String txt = "ADD_USER";
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Port: " + port);
+//        System.out.println("IP: " + ip.toString());
+//        Socket soc = new Socket(ip, port);
+//        
+//        
+//        System.out.println("\nInsereix un nou usuari prenent ENTER");
+//        scanner.nextLine();
+//        User u = new User("bookenjoyer", "1234", "Pepe", "Gutierrez", UserType.USER);
+//        
+//        CryptoUtils.sendString(soc.getOutputStream(), txt, pswd);
+//        
+//        
+//        CryptoUtils.sendObject(soc.getOutputStream(), (Object)u, pswd);
+//        System.out.println("User " + u.getFullName() + " enviat");
+//        
+//        int userid = CryptoUtils.readInt(soc.getInputStream(), pswd);
+//        System.out.println("ID generada: " + userid);
+//        
+//        
+//        
+//        System.out.println("Pren enter per tancar la demo");
+//        scanner.nextLine();
+//        soc.close();
     }
     
 }

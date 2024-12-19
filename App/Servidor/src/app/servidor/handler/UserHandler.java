@@ -5,6 +5,7 @@
 package app.servidor.handler;
 
 import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.User;
 import app.servidor.entity.DBUser;
 import app.servidor.app.ServerException;
@@ -41,50 +42,41 @@ public class UserHandler {
      */
     public static void getUserById(Socket soc, String pswd) {
         System.out.println("Executant getUserById");
-        try {
-            System.out.println("inicialitzant objectinput");
-            
-            int userId = 0; // inicialitzo la id que es buscarà
-            userId = CryptoUtils.readInt(soc.getInputStream(), pswd);
-            System.out.println("objectInput llegit. Id : " + userId);
-            User user = DBUser.getUserById(userId);
-            System.out.println("Select executada");
-            
-            System.out.println("Trobat usuari");
-            CryptoUtils.sendObject(soc.getOutputStream(), (Object)user, pswd);
-            System.out.println("Usuari enviat");
-        } catch (IOException ex) {
-            throw new ServerException(ex);
-        }
+//        try {
+//            System.out.println("inicialitzant objectinput");
+//            
+//            int userId = 0; // inicialitzo la id que es buscarà
+//            userId = CryptoUtils.readInt(soc.getInputStream(), pswd);
+//            System.out.println("objectInput llegit. Id : " + userId);
+//            User user = DBUser.getUserById(userId);
+//            System.out.println("Select executada");
+//            
+//            System.out.println("Trobat usuari");
+//            CryptoUtils.sendObject(soc.getOutputStream(), (Object)user, pswd);
+//            System.out.println("Usuari enviat");
+//        } catch (IOException ex) {
+//            throw new ServerException(ex);
+//        }
     }
     
     /**
      * rep un nou usuari i l'inserta a la base de dades, retorna per socket la nova id
-     * @param clientSocket
+     * @param soc
      */
-    public static void addNewUser(Socket clientSocket)
+    public static void addNewUser(Stream stream, String pswd)
         {
             System.out.println("Inserint new user");
-            ObjectInputStream objectInput = null;
-            ObjectOutputStream objectOutput = null;
             
             try {
-                objectInput = new ObjectInputStream(clientSocket.getInputStream());
-                User newUser = (User) objectInput.readObject();
-                System.out.println("Rebut " + newUser.getFullName());
-                System.out.println("Inserint...");
-                int userid = DBUser.insertUser(newUser);
-                System.out.println("Inserit!");
-                objectOutput = new ObjectOutputStream(clientSocket.getOutputStream());
-                objectOutput.writeInt(userid);
-                objectOutput.flush();
-            } catch (IOException | ClassNotFoundException ex) {
+//                User newUser = (User) CryptoUtils.readObject(soc.getInputStream(), pswd);
+//                System.out.println("Rebut " + newUser.getFullName());
+//                System.out.println("Inserint...");
+//                int userid = DBUser.insertUser(newUser);
+//                System.out.println("Inserit!");
+//                CryptoUtils.sendInt(stream, userid, pswd);
+            } catch (Exception ex) {
                 throw new ServerException(ex);
-            } finally {
-                try {
-                    objectInput.close();
-                } catch (IOException ex) {}
-            }
+            } 
         }
 
     /**

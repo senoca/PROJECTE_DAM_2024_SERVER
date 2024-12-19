@@ -85,19 +85,19 @@ public class AuthorHandler {
      */
     public static void getAuthorById(Socket soc, String pswd) {
         System.out.println("Executant authorHandler.getAuthorById");
-        try {
-            int authorId = CryptoUtils.readInt(soc.getInputStream(), pswd);
-            System.out.println("Rebuda ID: " + authorId);
-            Author author = DBAuthor.getAuthor(authorId);
-            if (author == null) System.out.println("No s'ha trobat cap autor amb ID " + authorId);
-            else System.out.println("S'ha trobat: " + author.getFullName());
-            System.out.println("Enviant author");
-            
-            CryptoUtils.sendObject(soc.getOutputStream(), author, pswd);
-            System.out.println("Autor enviat");
-        } catch (Exception ex) {
-            throw new ServerException(ex);
-        }
+//        try {
+//            int authorId = CryptoUtils.readInt(soc.getInputStream(), pswd);
+//            System.out.println("Rebuda ID: " + authorId);
+//            Author author = DBAuthor.getAuthor(authorId);
+//            if (author == null) System.out.println("No s'ha trobat cap autor amb ID " + authorId);
+//            else System.out.println("S'ha trobat: " + author.getFullName());
+//            System.out.println("Enviant author");
+//            
+//            CryptoUtils.sendObject(soc.getOutputStream(), author, pswd);
+//            System.out.println("Autor enviat");
+//        } catch (Exception ex) {
+//            throw new ServerException(ex);
+//        }
     }
     
     /**
@@ -115,7 +115,7 @@ public class AuthorHandler {
             System.out.println("Autor: " + author.getFullName());
             int authorId = DBAuthor.insertNewAuthor(author);
             System.out.println("Inserit! ID generada: " + authorId);
-            CryptoUtils.sendInt(soc.getOutputStream(), authorId, pswd);
+            //CryptoUtils.sendInt(soc.getOutputStream(), authorId, pswd);
             
         } catch (Exception ex) {
             throw new ServerException(ex);
@@ -126,16 +126,15 @@ public class AuthorHandler {
      * rep per socket un client amb dades modificades, i el sobreescriu
      * @param clientSocket
      */
-    public static void modifyAuthor(Socket clientSocket) {
-        ObjectInputStream objectInput = null;
+    public static void modifyAuthor(Socket clientSocket, String pswd) {
+        
             try {
-                objectInput = new ObjectInputStream(clientSocket.getInputStream());
-                Author updatedAuthor = (Author) objectInput.readObject();
+                
+                
+                Author updatedAuthor = (Author) CryptoUtils.readObject(clientSocket.getInputStream(), pswd);
                 DBAuthor.updateNewAuthor(updatedAuthor.getAuthorid(), updatedAuthor);
             } catch (Exception ex) {
                 throw new ServerException(ex);
-            } finally {
-                Utils.closeObjectInputStream(objectInput);
             }
         }
 

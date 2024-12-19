@@ -5,6 +5,7 @@
 package app.servidor.app;
 
 import app.crypto.CryptoUtils;
+import app.crypto.Stream;
 import app.model.User;
 import app.servidor.handler.AuthorHandler;
 import app.servidor.handler.LogHandler;
@@ -12,7 +13,9 @@ import app.servidor.handler.MediaHandler;
 import app.servidor.handler.UserHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,6 +30,7 @@ public class ClientThread extends Thread {
         private final Socket soc;
         private ServerSocket serverSocket;
         private HashMap<String, User> activeSessions;
+        private final Stream stream;
 
     /**
      * Constructor de classe Client
@@ -37,6 +41,8 @@ public class ClientThread extends Thread {
             this.serverSocket = serverSocket;
             this.soc = socket;
             this.activeSessions = activeSessions;
+            this.stream = new Stream(soc);
+            System.out.println("Stream iniciat");
         }
         
     /**
@@ -47,16 +53,16 @@ public class ClientThread extends Thread {
             try (soc) {
                 System.out.println("Iniciat thread client");
                 // Establecer timeout en el socket (30 segundos)
-                soc.setSoTimeout(10000);
+                soc.setSoTimeout(5000);
 
                 // He canviant les variables in i out a readFromClient i writeToClient respectivament, per més claretat de lectura
                 //BufferedReader readFromClient = new BufferedReader(new InputStreamReader(soc.getInputStream()));
                 //PrintWriter writeToClient = new PrintWriter(soc.getOutputStream(), true);
-                System.out.println("Canals inicialitzats");
+                
                 // Leer el comando del cliente
                 String pswd = CryptoUtils.getGenericPassword();
                 //String command = readFromClient.readLine();
-                String command = CryptoUtils.readString(soc.getInputStream(), pswd);
+                String command = CryptoUtils.readString(stream, pswd);
                 System.out.println("Executant petició: " + command);
                 /*
                 PETICIONS LOGIN
@@ -70,13 +76,13 @@ public class ClientThread extends Thread {
                     
                 } else if ("LOGIN".equals(command)) {
                     try {
-                        LogHandler.login(activeSessions, soc, pswd);
+                        LogHandler.login(activeSessions, stream, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
                 } else if ("GET_PROFILE".equals(command)) {
                     try {
-                        LogHandler.getProfile(activeSessions, soc, pswd);
+                        //LogHandler.getProfile(activeSessions, soc, pswd);
                     } catch (ServerException ex){
                         System.out.println(ex.getMessage());
                     }
@@ -100,7 +106,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("ADD_USER".equals(command)) {
                     try {
-                        UserHandler.addNewUser(soc);
+                        //UserHandler.addNewUser(soc, pswd);
                         Utils.commit();
                     } catch (ServerException ex){
                         Utils.rollback();
@@ -152,7 +158,7 @@ public class ClientThread extends Thread {
                     }
                 } else if ("MODIFY_AUTHOR".equals(command)) {
                     try {
-                        AuthorHandler.modifyAuthor(soc);
+                        AuthorHandler.modifyAuthor(soc, pswd);
                         Utils.commit();
                     } catch (ServerException ex) {
                         ex.printStackTrace();
@@ -229,11 +235,10 @@ public class ClientThread extends Thread {
                 }
                 else {
                     // Comando no reconocido
-                    CryptoUtils.sendString(soc.getOutputStream(), pswd, "ERROR: Ordre no reconeguda");
+                    CryptoUtils.sendString(stream, pswd, "ERROR: Ordre no reconeguda");
 //                    writeToClient.println("ERROR: Ordre no reconeguda");
                     System.err.println("Error: Ordre no reconeguda: " + command);
                 }
-
             } catch (Exception e) {
                 /*
                 if (e.getMessage().contains("Connection reset")) {
@@ -244,6 +249,7 @@ public class ClientThread extends Thread {
                 */
                 throw new ServerException(e);
             } 
+            System.out.println("Socket tancat");
             /*
             finally {
                 try {

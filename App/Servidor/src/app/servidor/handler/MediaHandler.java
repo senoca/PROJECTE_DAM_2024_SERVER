@@ -41,13 +41,13 @@ public class MediaHandler {
      * @param soc
      */
     public static void getMediaById(Socket soc, String pswd) {
-        try {
-            int mediaId = CryptoUtils.readInt(soc.getInputStream(), pswd);
-            Media media = DBMedia.getMediaById(mediaId);
-            CryptoUtils.sendObject(soc.getOutputStream(), (Object)media, pswd);
-        } catch (IOException ex) {
-            throw new ServerException(ex);
-        }
+//        try {
+//            int mediaId = CryptoUtils.readInt(soc.getInputStream(), pswd);
+//            Media media = DBMedia.getMediaById(mediaId);
+//            CryptoUtils.sendObject(soc.getOutputStream(), (Object)media, pswd);
+//        } catch (IOException ex) {
+//            throw new ServerException(ex);
+//        }
     }
     
     /**

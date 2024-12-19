@@ -5,6 +5,7 @@
 package app.crypto;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -100,6 +102,7 @@ public class CryptoUtils {
     private static byte[] encryptString(String txt, SecretKey key) {
         System.out.println("encryptString");
         byte[] data = null;
+        if (txt == null) return null;
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -113,6 +116,7 @@ public class CryptoUtils {
     private static String decryptString(byte[] data, SecretKey key) {
         System.out.println("Decrypting String");
         String txt = null;
+        if (data == null) return null;
         try {    
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
@@ -127,6 +131,7 @@ public class CryptoUtils {
     private static String byteToB64(byte[] data) {
         try {
             System.out.println("byteToB64. Data: " + data.toString());
+            if (data == null) return null;
             String base64 = Base64.getEncoder().encodeToString(data);
             return base64;        
         } catch (Exception ex) {
@@ -138,6 +143,7 @@ public class CryptoUtils {
     private static byte[] b64ToByte(String base64) {
         try {
             System.out.println("b64ToByte. Data: " + base64);
+            if (base64 == null) return null;
             byte[] data = Base64.getDecoder().decode(base64);
             return data;      
         } catch (Exception ex) {
@@ -147,53 +153,78 @@ public class CryptoUtils {
         
     }
     
-    public static void sendString(OutputStream out, String txt, String pswd) throws IOException {
-        System.out.println("Sending String");
-        PrintWriter writeToServer = new PrintWriter(out, true);    
-        
+    public static void sendString(Stream stream, String txt, String pswd) {
+        try {
+            
+            System.out.println("Sending String");
+            
             SecretKey key = generateKeyFromPassword(pswd);
             byte[] data = encryptString(txt, key);
             String b64 = byteToB64(data);
-            writeToServer.println(b64);    
-        
+            stream.getWriter().println(b64);        
             
+        } catch (Exception ex) {
+            
+            throw new CryptoException(ex);
+        }
     }
     
-    public static String readString(InputStream in, String pswd) throws IOException {
+    public static String readString(Stream stream, String pswd)
+    {
         System.out.println("readString");
-        SecretKey key = generateKeyFromPassword(pswd);
-        BufferedReader readFromClient = new BufferedReader(new InputStreamReader(in));
         String txt = null;
-        
+        try {
+            System.out.println("readString");
+            SecretKey key = generateKeyFromPassword(pswd);
+            System.out.println("Key generada");
+            BufferedReader readFromClient = stream.getReader();
+            
+
             String b64 = readFromClient.readLine();
             byte[] data = b64ToByte(b64);
             System.out.println("Rebut b64: " + b64);
             txt = decryptString(data, key);
             System.out.println("b64 decriptat: " + txt);
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new CryptoException(ex);
+        }
         return txt;
     }
     
-    public static void sendInt(OutputStream out, int n, String pswd) throws IOException {
-        System.out.println("Sending Int");
-        String nm = Integer.toString(n);
-        sendString(out, nm, pswd);
-    }
-    
-    public static int readInt(InputStream in, String pswd) throws IOException {
-        System.out.println("Reading Int");
-        String nm = readString(in, pswd);
-        int n = Integer.parseInt(nm);
-        return n;
+    public static void sendInt(Stream stream, int n, String pswd) {
+        try {
+            System.out.println("Sending Int");
+            String nm = Integer.toString(n);
+            sendString(stream, nm, pswd);    
+        } catch (Exception ex) {
+            throw new CryptoException(ex);
+        }
         
     }
     
-    public static void sendObject(OutputStream out, Object obj, String pswd) throws IOException {
+    public static int readInt(Stream stream, String pswd) {
+        try {
+            System.out.println("Reading Int");
+            String nm = readString(stream, pswd);
+            int n = Integer.parseInt(nm);
+            return n;  
+        } catch (Exception ex) {
+            throw new CryptoException(ex);
+        }
+        
+        
+    }
+    
+    public static void sendObject(OutputStream out, Object obj, String pswd) {
          try {
             System.out.println("Sending object");
             ObjectOutputStream stream = new ObjectOutputStream(out);
             SecretKey key = generateKeyFromPassword(pswd);
             byte[] data = encryptObject(obj, key);
-            stream.write(data);
+            //stream.write(data);
+            stream.writeObject(obj);
             stream.flush();
             System.out.println("Object sent");
         } catch (Exception ex) {
@@ -202,17 +233,20 @@ public class CryptoUtils {
         
     }
     
-    public static Object readObject(InputStream in, String pswd) throws IOException {
+    public static Object readObject(InputStream in, String pswd) {
         System.out.println("Reading object");
         try {
             ObjectInputStream stream = new ObjectInputStream(in);
             SecretKey key = generateKeyFromPassword(pswd);
             System.out.println("readObject: ready to read data");
+            /*
             byte[] data = stream.readAllBytes();
             System.out.println("readObject: data read");
             System.out.println(data);
             Object obj = decryptObject(data, key);
             System.out.println("Object read");
+*/
+            Object obj = stream.readObject();
             return obj;
         } catch (Exception ex) {
             throw new CryptoException(ex);
